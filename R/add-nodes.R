@@ -70,3 +70,20 @@ add_grain <- function(panicle_graph,
 
   return(new_graph)
 }
+
+#' Merge all grains into graph
+#'
+#' @export
+
+add_all_grains <- function(graph_base, grains)
+{
+  # spikelets <- seeds
+  # graph_base <- tst
+  assign_grain <- function(graph_base, grain) {
+    graph_base <<- add_grain(graph_base, grain)
+  }
+  purrr::pmap(grains, ~assign_grain(graph_base = graph_base,
+                                   grain = c(..1, ..2)))
+
+  return(graph_base)
+}
