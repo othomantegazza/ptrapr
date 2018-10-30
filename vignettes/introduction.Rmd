@@ -63,9 +63,30 @@ panicle %>%
 grain_path <- system.file("extdata/Nip_1_1_6307.ricegr",
                           package = "ptrapr")
 
-grain <- 
+grains <- 
   grain_path %>%
   read_grain()
   
+```
+
+```{r}
+new_graph <- 
+  panicle %>%
+  add_grain()
+```
+
+
+```{r}
+new_graph %>% 
+  ggraph() + 
+  geom_edge_link(arrow = grid::arrow(length = unit(0.08,
+                                                   "inches"),
+                                     type = "closed"),
+                 colour = "grey30") +
+  geom_node_point(aes(colour = type),
+                  size = 2,
+                  alpha =.7) +
+  coord_fixed() +
+  theme_minimal()
 ```
 

@@ -16,7 +16,10 @@ Imports:
     xml2 (>= 1.2.0),
     tibble,
     dplyr,
-    purrr
+    purrr,
+    igraph,
+    sp,
+    rgeos
 Suggests: 
     knitr,
     rmarkdown
