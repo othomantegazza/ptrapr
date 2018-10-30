@@ -11,6 +11,8 @@
 #'
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
+#'
+#' @export
 
 read_panicle <- function(path) {
   vertices <- xml2::read_xml(path) %>%
@@ -44,4 +46,33 @@ read_panicle <- function(path) {
 
   tst <- tidygraph::tbl_graph(nodes = nodes,
                               edges = edges)
+}
+
+
+#' Read Grain Spacial Graph
+#'
+#' Read the XML file that stores grain location
+#' (the P-TRAP output that ends by .ricegr)
+#'
+#' And returns a tibble that stores seed
+#'  coordinates
+#'
+#' @param path Path to the panicle XML file
+#'
+#' @export
+
+
+read_grain <- function(path)
+{
+  grain <-
+    path %>%
+    xml2::read_xml() %>%
+    xml2::xml_find_all(".//particle")
+
+  grain <- tibble::tibble(x = grain %>%
+                            xml2::xml_attr("cx") %>%
+                            as.numeric(),
+                          y = grain %>%
+                            xml2::xml_attr("cy") %>%
+                            as.numeric())
 }

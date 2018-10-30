@@ -59,3 +59,13 @@ panicle %>%
   theme_minimal()
 ```
 
+```{r}
+grain_path <- system.file("extdata/Nip_1_1_6307.ricegr",
+                          package = "ptrapr")
+
+grain <- 
+  grain_path %>%
+  read_grain()
+  
+```
+
