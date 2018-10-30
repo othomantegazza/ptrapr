@@ -1,0 +1,24 @@
+Package: ptrapr
+Type: Package
+Title: Analyze the Structure of Rice Panicles
+Version: 0.0.0.9000
+Authors@R: person("Otho", "Mantegazza", email = "otho.mantegazza@gmail.com",
+				          role = c("aut", "cre"))
+Description: With this package you can analyze the architecture and topology
+  of rice panicles.
+  This packages parses the ouptput of P-TRAP
+  (https://bioinfo.ird.fr/index.php/resources/49-uncategorised/102-p-trap)
+  and provides you with function to plot and analyze a panicle spatial graph.
+License: GPL-3 | file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    xml2 (>= 1.2.0),
+    tibble,
+    dplyr,
+    purrr
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+RoxygenNote: 6.1.0
