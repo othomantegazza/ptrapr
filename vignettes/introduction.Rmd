@@ -22,7 +22,10 @@ knitr::opts_chunk$set(
 library(ptrapr)
 library(ggraph)
 library(magrittr)
+library(igraph)
+library(tibble)
 ```
+
 
 ```{r}
 path <- system.file("extdata/Nip_1_1_6307.ricepr", 
@@ -108,5 +111,42 @@ full_graph %>%
                   alpha =.7) +
   coord_fixed() +
   theme_minimal()
+```
+
+# igraph Reminder
+
+type
+
+```{r}
+panicle %>% 
+  vertex_attr()
+
+panicle %>% 
+  vertex_attr(name = "type")
+```
+
+
+children
+
+```{r}
+panicle %>%
+  neighbors(1, "out")
+```
+
+```{r}
+
+```
+
+graph to dataframe
+
+```{r}
+panicle %>% 
+  as_long_data_frame() %>%
+  as_tibble()
+```
+
+
+```{r}
+library(tidygraph)
 ```
 
