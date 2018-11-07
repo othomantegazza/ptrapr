@@ -24,6 +24,7 @@ library(ggraph)
 library(magrittr)
 library(igraph)
 library(tibble)
+library(dplyr)
 ```
 
 
@@ -113,6 +114,34 @@ full_graph %>%
   theme_minimal()
 ```
 
+
+# test another panicle
+
+```{r}
+path <- system.file("extdata/Nip_1_2_6308.ricepr", 
+                   package = "ptrapr") 
+
+panicle2 <-
+  path %>% 
+  read_panicle()
+```
+
+
+```{r}
+panicle2 %>% 
+  ggraph() + 
+  geom_edge_link(arrow = grid::arrow(length = unit(0.08,
+                                                   "inches"),
+                                     type = "closed"),
+                 colour = "grey30") +
+  geom_node_point(aes(colour = type),
+                  size = 2,
+                  alpha =.7) +
+  coord_fixed() +
+  theme_minimal()
+```
+
+
 # igraph Reminder
 
 type
@@ -123,6 +152,14 @@ panicle %>%
 
 panicle %>% 
   vertex_attr(name = "type")
+
+panicle %>%
+  edge_attr()
+
+panicle %>% 
+  as_long_data_frame() %>%
+  filter(from_type == "Primary",
+         to_type == "Primary") %>%
 ```
 
 
@@ -145,8 +182,71 @@ panicle %>%
   as_tibble()
 ```
 
+# Manipulate with tidygraph?
 
 ```{r}
 library(tidygraph)
+```
+
+```{r}
+panicle2
+
+panicle2 %>%
+  activate(edges) %>%
+  reroute(from = to, to = from) %>%
+  ggraph() + 
+  geom_edge_link(arrow = grid::arrow(length = unit(0.08,
+                                                   "inches"),
+                                     type = "closed"),
+                 colour = "grey30") +
+  geom_node_point(aes(colour = type),
+                  size = 2,
+                  alpha =.7) +
+  coord_fixed() +
+  theme_minimal()
+```
+
+```{r}
+prim_gen <- 
+  panicle2 %>% 
+  as_long_data_frame() %>%
+  filter(from_type %in% c("Primary", "Generating"),
+         to_type %in% c("Primary", "Generating")) %>%
+  select(from, to)
+
+
+panicle2 %>%
+  as_tbl_graph() %>%
+  activate(edges) %>%
+  active()
+  
+# use reroute and case_when
+panicle2 %>%
+  as_tbl_graph() %>% 
+  activate(edges) %>%
+  reroute(from = case_when(from %in% prim_gen$from & 
+                             to %in% prim_gen$to ~ to,
+                           TRUE ~ from),
+          to = case_when(from %in% prim_gen$from &
+                           to %in% prim_gen$to ~ from,
+                         TRUE ~ to)) %>% 
+  
+  ggraph() + 
+  geom_edge_link(arrow = grid::arrow(length = unit(0.08,
+                                                   "inches"),
+                                     type = "closed"),
+                 colour = "grey30") +
+  geom_node_point(aes(colour = type),
+                  size = 2,
+                  alpha =.7) +
+  coord_fixed() +
+  theme_minimal()
+  
+
+# am I using from and to correctly?
+
+panicle2 %>%
+  as_long_data_frame() %>%
+  filter(from_type == "Generating")
 ```
 
