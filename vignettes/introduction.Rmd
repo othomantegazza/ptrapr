@@ -250,3 +250,89 @@ panicle2 %>%
   filter(from_type == "Generating")
 ```
 
+# Reproduce Helene's plot
+
+```{r}
+prim_gen <- 
+  full_graph %>% 
+  as_long_data_frame() %>%
+  filter(from_type %in% c("Primary", "Generating"),
+         to_type %in% c("Primary", "Generating")) %>%
+  select(from, to)
+
+tst <- 
+  full_graph %>%
+  as_tbl_graph() %>% 
+  activate(edges) %>%
+  reroute(from = case_when(from %in% prim_gen$from & 
+                             to %in% prim_gen$to ~ to,
+                           TRUE ~ from),
+          to = case_when(from %in% prim_gen$from &
+                           to %in% prim_gen$to ~ from,
+                         TRUE ~ to)) 
+
+tst %>% 
+  ggraph() + 
+  geom_edge_link(arrow = grid::arrow(length = unit(0.08,
+                                                   "inches"),
+                                     type = "closed"),
+                 colour = "grey30") +
+  geom_node_point(aes(colour = type),
+                  size = 2,
+                  alpha =.7) +
+  coord_fixed() +
+  theme_minimal()
+```
+
+```{r}
+first_node <- 
+  tst %>% 
+  as_long_data_frame() %>%
+  filter(from_type == "Generating") %>%
+  filter(from_x == max(from_x)) %>%
+  filter(to_type != "Primary")
+```
+
+```{r}
+dot_plot <- 
+  tibble(x = 1,
+         y = 1,
+         type = "secondary")
+
+
+# select children with type "secondary"
+tst %>%
+  neighbors(first_node$from_rank, mode = "out") 
+
+  
+
+# select children with type "secondary"
+# second strategy
+tst %>% 
+  as_long_data_frame() %>%
+  filter(from_type == "Generating") %>%
+  filter(from_x == max(from_x)) %>%
+  filter(to_type == "Seconday") %>%
+  pull(to_rank)
+
+# 21
+
+# how do I find all descendants of a node?
+first_subtree <- 
+  tst %>% 
+  subcomponent(21, mode = "out")
+  
+tst %>%
+  induced.subgraph(first_subtree) %>%
+  ggraph() + 
+  geom_edge_link(arrow = grid::arrow(length = unit(0.08,
+                                                   "inches"),
+                                     type = "closed"),
+                 colour = "grey30") +
+  geom_node_point(aes(colour = type),
+                  size = 2,
+                  alpha =.7) +
+  coord_fixed() +
+  theme_minimal()
+```
+
