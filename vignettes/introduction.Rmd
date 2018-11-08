@@ -25,6 +25,7 @@ library(magrittr)
 library(igraph)
 library(tibble)
 library(dplyr)
+library(tidygraph)
 ```
 
 
@@ -302,7 +303,7 @@ dot_plot <-
 
 # select children with type "secondary"
 tst %>%
-  neighbors(first_node$from_rank, mode = "out") 
+  neighbors(first_node$from, mode = "out") 
 
   
 
@@ -334,5 +335,56 @@ tst %>%
                   alpha =.7) +
   coord_fixed() +
   theme_minimal()
+```
+
+longest path - assume it is primary branch axis
+
+```{r}
+top_vertex <- 
+  tst %>% 
+  induced_subgraph(first_subtree) %>%
+  # diameter(directed = TRUE) # 8
+  distances(v = 1) %>%
+  which.max()
+
+f_subtree <-
+  tst %>% 
+  induced_subgraph(first_subtree)
+```
+
+```{r}
+f_subtree %>% 
+  vertex_attr()
+
+
+f_node_rank <- 
+f_subtree %>%
+  shortest_paths(from = which(f_subtree %>%
+                                vertex_attr() %>%
+                                .$rank == first_node$to),
+                 to = top_vertex)
+
+
+```
+
+
+```{r}
+types <- f_subtree %>% vertex_attr() %$% type
+
+types_ranked <- f_node_rank$vpath %>%
+  purrr::flatten_int() %>%
+  types[.]
+```
+
+```{r}
+tibble(x = 1:length(types_ranked),
+       y = 1,
+       type = types_ranked) %>%
+  ggplot(aes(x = x,
+             y = y,
+             colour = types_ranked)) +
+  geom_point(size = 10) + 
+  lims(y = c(0,2)) +
+  theme_bw()
 ```
 

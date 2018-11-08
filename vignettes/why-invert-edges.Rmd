@@ -1,0 +1,60 @@
+---
+title: "Vignette Title"
+author: "Vignette Author"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Invert edges on main axis}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(ptrapr)
+library(ggraph)
+library(magrittr)
+library(igraph)
+```
+
+```{r}
+path <- system.file("extdata/Nip_2_3_6312.ricepr", 
+                   package = "ptrapr") 
+
+
+path %>% 
+  read_panicle() %>%
+  ggraph() + 
+  geom_edge_link(arrow = grid::arrow(length = unit(0.08,
+                                                   "inches"),
+                                     type = "closed"),
+                 colour = "grey30") +
+  geom_node_point(aes(colour = type),
+                  size = 2,
+                  alpha =.7) +
+  coord_fixed() +
+  theme_minimal()
+```
+
+```{r}
+
+path <- system.file("extdata/Nip_1_3_6309.ricepr", 
+                   package = "ptrapr") 
+
+
+path %>% 
+  read_panicle() %>%
+  ggraph() + 
+  geom_edge_link(arrow = grid::arrow(length = unit(0.08,
+                                                   "inches"),
+                                     type = "closed"),
+                 colour = "grey30") +
+  geom_node_point(aes(colour = type),
+                  size = 2,
+                  alpha =.7) +
+  coord_fixed() +
+  theme_minimal()
+```
+
+Some are inverted and some are not.
