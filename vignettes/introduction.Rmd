@@ -388,3 +388,62 @@ tibble(x = 1:length(types_ranked),
   theme_bw()
 ```
 
+Extra notes
+
+```{r}
+library(tidyverse)
+library(igraph)
+library(ggraph)
+library(magrittr)
+
+path <- system.file("extdata/Nip_1_1_6307.ricepr", 
+                    package = "ptrapr") 
+
+panicle <-
+  path %>% 
+  read_panicle()
+
+grain_path <- system.file("extdata/Nip_1_1_6307.ricegr",
+                          package = "ptrapr")
+
+grains <- 
+  grain_path %>%
+  read_grain()
+
+panicle <- 
+  panicle %>%
+  add_all_grains(grains)
+
+prim_gen <- 
+  panicle %>% 
+  as_long_data_frame() %>%
+  filter(from_type == "Generating") %>% 
+  filter(from_x == max(from_x)) %>%
+  pull(to_rank) %T>%
+  print()
+         
+
+sub_branch <- 
+  panicle %>% 
+  pull_branch(prim_gen) 
+
+
+sub_branch %>% 
+  ggraph() + 
+  geom_edge_link(arrow = grid::arrow(length = unit(0.08,
+                                                   "inches"),
+                                     type = "closed"),
+                 colour = "grey30") +
+  geom_node_point(aes(colour = type),
+                  size = 2,
+                  alpha =.7) +
+  coord_fixed() +
+  theme_minimal()
+  
+branch_line <- 
+  make_idline(sub_branch,
+            prim_gen)
+
+
+```
+
