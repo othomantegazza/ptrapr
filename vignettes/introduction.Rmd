@@ -447,3 +447,60 @@ branch_line <-
 
 ```
 
+# Test panicle graph
+
+```{r}
+library(tidyverse)
+library(igraph)
+library(ggraph)
+library(magrittr)
+
+path <- system.file("extdata/Nip_3_3_6315.ricepr", 
+                    package = "ptrapr") 
+
+panicle <-
+  path %>% 
+  read_panicle()
+
+grain_path <- system.file("extdata/Nip_3_3_6315.ricegr",
+                          package = "ptrapr")
+
+grains <- 
+  grain_path %>%
+  read_grain()
+
+panicle <- 
+  panicle %>%
+  add_all_grains(grains)
+
+panicle %>%
+  ggraph() + 
+  geom_edge_link(arrow = grid::arrow(length = unit(0.08,
+                                                   "inches"),
+                                     type = "closed"),
+                 colour = "grey30") +
+  geom_node_point(aes(colour = type),
+                  size = 2,
+                  alpha =.7) +
+  coord_fixed() +
+  theme_minimal()
+```
+
+```{r}
+gen_nodes <- 
+  panicle %>%
+  get_generating()
+
+pan_tibble <- 
+  panicle %>%
+  panicle_tibble(start = gen_nodes[1],
+                 to = gen_nodes[2])
+
+pan_tibble %>%
+  ggplot(aes(x = rank,
+             y = y,
+             colour = type)) +
+  geom_point(size = 10) + 
+  theme_bw()
+```
+

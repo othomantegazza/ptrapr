@@ -81,3 +81,98 @@ make_idline <- function(branch,
     purrr::flatten_int() %>%
     node_types[.]
 }
+
+
+#' Identify Start and End Generating node
+#'
+#' This function select the start generating node
+#' as the one with the highest x coordinate and the
+#' end as the node with the lowest
+#'
+#' This approach is prone to error is the panicle
+#' is not orientated from right to left in the
+#' P-TRAP picture.
+#'
+#' @param panicle a panicle graph.
+
+get_generating <- function(panicle) {
+  panicle %>%
+    igraph::as_long_data_frame() %>%
+    filter(.data$from_type == "Generating") %>%
+    select(.data$from_x, .data$from_rank) %>%
+    distinct() %>%
+    arrange(desc(.data$from_x)) %>%
+    pull(from_rank)
+}
+
+#' Turn a Panicle Graph in a Tibble useful for a dotplot
+#'
+#' @param panicle a panicle graph.
+
+panicle_tibble <- function(panicle,
+                           start,
+                           to) {
+  main_path <-
+    panicle %>%
+    igraph::shortest_paths(from = start,
+                           to = to,
+                           mode = "out") %>%
+    .$vpath %>%
+    purrr::flatten_int()
+
+  # I need a way to select neighbours
+  # with any other attribute than primary
+  not_primary <- function(v) {
+    nb <- igraph::neighbors(graph = panicle,
+                      v = v,
+                      mode = "out")
+    nb_attr <- igraph::vertex_attr(graph = panicle,
+                                   index = nb)
+    keep <- nb$type != "Primary"
+    nb[keep] %>% as.numeric()
+  }
+
+  branch_starts <-
+    main_path %>%
+    purrr::map(not_primary) %>%
+    .[1:9]
+
+  tb <- tibble(vert_rank = branch_starts,
+               branch = branch_starts %>%
+                 purrr::map(
+                   ~pull_branch(panicle = panicle,
+                                vert = .))
+    )
+
+  print(tb)
+
+  tb_list <-
+    tb %>%
+    pmap(make_idline) %>%
+    .[-3] %>%
+    map(
+      ~tibble(type = .,
+              rank = 1:length(.))
+    )
+
+  tb_list <-
+  1:length(tb_list) %>%
+    map(~mutate(tb_list[[.]], y = .))
+
+  tb_list %>% purrr::reduce(dplyr::bind_rows)
+
+
+  # purrr::map(
+  #   ~make_idline()
+  #   )
+  # main_path %>%
+  #   purrr::map(
+  #     ~igraph::neighbors(graph = panicle,
+  #                        v = .,
+  #                        mode = "out")
+  #     ) %>%
+  #   map(
+  #     ~vertex_attr(graph = panicle,
+  #                  index = .)
+  #     )
+}
