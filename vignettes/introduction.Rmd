@@ -1,10 +1,10 @@
 ---
-title: "Vignette Title"
-author: "Vignette Author"
+title: "Plot Panicle Architecture"
+author: "Otho Mantegazza"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Plot Panicle Architecture}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -18,6 +18,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Setup
+
 ```{r}
 library(ptrapr)
 library(ggraph)
@@ -28,6 +30,28 @@ library(dplyr)
 library(tidygraph)
 ```
 
+# Read Panicle XML files
+
+The software [ptrap](https://bioinfo.ird.fr/index.php/resources/49-uncategorised/102-p-trap) scans pictures of rice panicles and outputs their architecture in two XML files:
+
+A structure file:
+: One file, with extension `.ricepr` stores the xy coordinates of each
+  element of a panicle besides spikelets/grains.
+  This file also stores the topology of those panicle elements in a
+  directed graph.
+  
+A grain file:
+: A second file, with extension `.ricegr` store the xy coordinates of each spikelet.
+
+We have included examples of such files in this package. You can access these examples **online* [here](https://github.com/othomantegazza/ptrapr) or locally in the `ptrapr/extdata` folder [^find.package]
+
+[^find.package]: Locate your local package folder with the function:: `find.package("ptrapr")`
+ 
+## Read Panicle Structure with `read_panicle()`
+
+The structure and topology of the panicle is stored in the `.ricepr` XML file.
+
+You can test the `read_panicle()` function on one of the `.ricepr` files included in this package.
 
 ```{r}
 path <- system.file("extdata/Nip_1_1_6307.ricepr", 
@@ -38,6 +62,9 @@ panicle <-
   read_panicle()
 ```
 
+You can visualize the panicle that you have loaded into R using [the package `ggraph`](https://www.ggplot2-exts.org/ggraph.html).
+
+For example:
 
 ```{r}
 panicle %>% 

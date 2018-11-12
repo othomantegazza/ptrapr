@@ -62,7 +62,7 @@ read_panicle <- function(path) {
 #' @export
 
 
-read_grain <- function(path)
+read_grains <- function(path)
 {
   grain <-
     path %>%

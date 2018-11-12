@@ -2,7 +2,7 @@
 
 export(add_all_grains)
 export(add_grain)
-export(read_grain)
+export(read_grains)
 export(read_panicle)
 importFrom(magrittr,"%>%")
 importFrom(rlang,.data)

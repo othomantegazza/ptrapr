@@ -1,0 +1,25 @@
+---
+title: "A Small Compendium on Graphs in R"
+author: "Vignette Author"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{A Small Compendium on Graphs in R}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+I wrote this vignette mostly for myself, to remind me how to deal with graph representation of panicles in R.
+
+This is not a general introduction about graphs in R. It is a practical note on the graph functions and operations that are used in this package.
+
+We have included examples of such files in this package. You can access these examples **online* [here](https://github.com/othomantegazza/ptrapr) or locally in the `ptrapr/extdata` folder [^find.package]
+
+[^find.package]: Locate your local package folder with the function: `find.folder(ptrapr)`

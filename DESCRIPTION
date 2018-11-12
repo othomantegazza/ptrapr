@@ -19,7 +19,8 @@ Imports:
     purrr,
     igraph,
     sp,
-    rgeos
+    rgeos,
+    magrittr
 Suggests: 
     knitr,
     rmarkdown
