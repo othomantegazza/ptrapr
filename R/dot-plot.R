@@ -132,7 +132,6 @@ get_base <- function(panicle) {
                          mode = "in")
       )
 
-  print(parents %>% purrr::map_int(length))
   gens[which(
     parents %>% purrr::map_int(length) == 0
     )]
@@ -141,11 +140,23 @@ get_base <- function(panicle) {
 #' Turn a Panicle Graph in a Tibble useful for a dotplot
 #'
 #' @param panicle a panicle graph.
+#'
+#' @export
 
-panicle_tibble <- function(panicle,
-                           start,
-                           to
-                           ) {
+panicle_tibble <- function(panicle)
+  {
+  # get the generating node
+  gens <- get_generating(panicle)
+
+  # the base node is the one with no parents
+  start <- get_base(panicle)
+
+  # the other is the top node
+  to <- gens[which(gens != start)]
+
+  # we assume that the main axis of the rachis
+  # is the shortest (and only!) path between
+  # the two generating nodes
   main_path <-
     panicle %>%
     igraph::shortest_paths(from = start,

@@ -100,20 +100,10 @@ To achieve this, first you will have to extract features from the panicle graph 
 To extract data from a panicle graph and store it in a convenient dataframe, we provide the `panicle_tibble()` function. You can use it this way:
 
 ```{r}
-gen_nodes <- 
-  good_panicle %>%
-  get_generating()
-
 pan_tibble <- 
   good_panicle %>%
-  panicle_tibble(start = gen_nodes[1],
-                 to = gen_nodes[2])
-
+  panicle_tibble()
 ```
-
-### NOT SURE WHERE TO PUT THIS
-
-By convention panicle graphs have two generating nodes, one at the base of the panicle and one at the top. The function `get_generating()` selects those two nodes
 
 You can use the `panicle_tibble()` function to get a dataframe that stores three variables:
 

@@ -4,7 +4,7 @@
 \alias{panicle_tibble}
 \title{Turn a Panicle Graph in a Tibble useful for a dotplot}
 \usage{
-panicle_tibble(panicle, start, to)
+panicle_tibble(panicle)
 }
 \arguments{
 \item{panicle}{a panicle graph.}

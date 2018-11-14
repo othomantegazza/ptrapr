@@ -18,4 +18,8 @@ end as the node with the lowest
 This approach is prone to error is the panicle
 is not orientated from right to left in the
 P-TRAP picture.
+
+This function is used and improved by `get_base()`,
+which select the base node as the generating
+node with no parents
 }
