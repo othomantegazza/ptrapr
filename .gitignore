@@ -6,3 +6,9 @@ inst/doc
 
 # extdata
 inst/extdata/*
+
+# website
+docs/*
+
+# parsed data
+data/*
