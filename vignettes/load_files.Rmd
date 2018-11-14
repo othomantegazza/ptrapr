@@ -150,7 +150,6 @@ full_panicle %>%
   geom_node_point(aes(colour = type),
                   size = 2,
                   alpha =.7) +
-  coord_fixed() +
-  theme_minimal()
+  coord_fixed() 
 ```
 

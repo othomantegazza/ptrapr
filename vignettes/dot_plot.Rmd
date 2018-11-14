@@ -1,0 +1,88 @@
+---
+title: "Visualize The Structure of a Panicle"
+author: "Otho Mantegazza"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Visualize The Structure of a Panicle}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Setup
+
+```{r, message=FALSE}
+library(dplyr)
+library(magrittr)
+library(igraph)
+library(ggraph)
+library(ptrapr)
+
+# ggplot2 theme minimal fits better with graphs
+theme_set(theme_minimal())
+
+# set a convenience wrapper to visualize panicle graphs
+plot_panicle <- function(panicle)
+  {
+  p <- 
+  panicle %>%
+    ggraph(layout = "nicely") +
+    geom_edge_link(arrow = grid::arrow(length = unit(0.08,
+                                                     "inches"),
+                                       type = "closed"),
+                   colour = "grey30") +
+    geom_node_point(aes(colour = type),
+                    size = 2,
+                    alpha =.7) +
+    coord_fixed() +
+    theme_minimal()
+
+  # print plot
+  p
+  }
+```
+
+# Intro / get data
+
+In this Vignette you will learn how to visualize the panicle stucture, with some simple plots that highlight important features.
+
+We provide the R object `panicle` which stores a panicle graph that has been already parsed in R. If you want to learn how to parse panicle XML files, please read the Vignette "Load Panicles into R".
+
+Access sample panicle data with:
+
+```{r}
+data(good_panicle)
+data(inverted_panicle)
+```
+
+# Check the direction of the edges (Branches)
+
+Sometimes, the direction ofthe edges in the graphs produced with ptrap are not correct.
+
+Every edge corrispond to the part of a branch that connect one node to another. By convention each edge should be directed outward: pointing from the node closer to the base of the panicle to the one further away.
+
+You can understand this better by looking at the panicle graphs: we provide a panicle two panicle graph objects:
+
+- One named `good_panicle` in which every edge points outward.
+- One named `inverted_panicle` in which the edges on the main rachis axis point inward.
+
+We can see this comparing the graph for `good_panicle`
+
+```{r}
+good_panicle %>% plot_panicle()
+```
+
+With the `inverted_panicle` graph, in which the edges on the main axis are inverted.
+
+```{r}
+inverted_panicle %>% plot_panicle()
+```
+
+We suggest you to inspect your data, and if some of the edges are inverted, you can learn how to correct them in the vignette "How to Invert Edges"
