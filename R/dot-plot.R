@@ -154,12 +154,12 @@ panicle_tibble <- function(panicle,
     .[-3] %>%
     purrr::map(
       ~tibble::tibble(type = .,
-              rank = 1:length(.))
+              node_rank = 1:length(.))
     )
 
   tb_list <-
   1:length(tb_list) %>%
-    purrr::map(~dplyr::mutate(tb_list[[.]], y = .))
+    purrr::map(~dplyr::mutate(tb_list[[.]], primary_rank = .))
 
   tb_list %>% purrr::reduce(dplyr::bind_rows)
 

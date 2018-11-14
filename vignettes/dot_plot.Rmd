@@ -73,16 +73,65 @@ You can understand this better by looking at the panicle graphs: we provide a pa
 - One named `good_panicle` in which every edge points outward.
 - One named `inverted_panicle` in which the edges on the main rachis axis point inward.
 
-We can see this comparing the graph for `good_panicle`
-
+We can see this comparing the graphs. This is the `good_panicle` graph:
+ 
 ```{r}
 good_panicle %>% plot_panicle()
 ```
 
-With the `inverted_panicle` graph, in which the edges on the main axis are inverted.
+Compare the previous graph with the one below, repersenting the `inverted_panicle` object. In the graph below, the edges on the main axis are inverted.
 
 ```{r}
 inverted_panicle %>% plot_panicle()
 ```
 
-We suggest you to inspect your data, and if some of the edges are inverted, you can learn how to correct them in the vignette "How to Invert Edges"
+We suggest you to inspect your data, and if some of the edges are inverted, you can learn how to correct them in the vignette "How to Invert Edges".
+
+Let's continue on the `good_panicle` graph.
+
+# Inspect Branching with a Dot Plot
+
+In order to visualize and inspect primary and secondary branching, we suggest you to represent your data with a dotplot. We have learned about this representation in [this paper by ](). We suggest this plot because it highlights number and position of primary and secondary branches in a direct and intuitive way.
+
+To achieve this, first you will have to extract features from the panicle graph and put them in a data frame
+
+## Extract a data frame from the graph with `panicle_tibble()`
+
+To extract data from a panicle graph and store it in a convenient dataframe, we provide the `panicle_tibble()` function. You can use it this way:
+
+```{r}
+gen_nodes <- 
+  good_panicle %>%
+  get_generating()
+
+pan_tibble <- 
+  good_panicle %>%
+  panicle_tibble(start = gen_nodes[1],
+                 to = gen_nodes[2])
+
+```
+
+### NOT SURE WHERE TO PUT THIS
+
+By convention panicle graphs have two generating nodes, one at the base of the panicle and one at the top. The function `get_generating()` selects those two nodes
+
+You can use the `panicle_tibble()` function to get a dataframe that stores three variables:
+
+- **`primary`**: the rank of the primary branch (the lower ranking branch are closer to base of the panicle).
+- **`type`**: Along that primary branch, the identity of each node. (Secondary, Spikelet or End).
+- **rank**: Along that primary branch, the rank of each node.
+
+# Visulize with a dotplot
+
+This dataframe is ready to be visualized with `ggplot2`.
+
+```{r}
+pan_tibble %>% 
+  ggplot(aes(x = node_rank,
+             y = primary_rank,
+             colour = type)) +
+  geom_point(size = 10) + 
+  theme_bw()
+
+```
+
