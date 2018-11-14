@@ -82,7 +82,6 @@ make_idline <- function(branch,
     node_types[.]
 }
 
-
 #' Identify Start and End Generating node
 #'
 #' This function select the start generating node
@@ -92,6 +91,10 @@ make_idline <- function(branch,
 #' This approach is prone to error is the panicle
 #' is not orientated from right to left in the
 #' P-TRAP picture.
+#'
+#' This function is used and improved by `get_base()`,
+#' which select the base node as the generating
+#' node with no parents
 #'
 #' @param panicle a panicle graph.
 
@@ -107,13 +110,42 @@ get_generating <- function(panicle) {
     dplyr::pull(from_rank)
 }
 
+#' Get the node at the base of the panicle
+#'
+#' This function returns the rank of the node (vertex) at the
+#' base of the panicle. We assume that the base node
+#' is the node  with type: `Generating` with no
+#' children
+#'
+#' @param panicle a panicle graph
+
+
+get_base <- function(panicle) {
+  # the base node is one of the generating
+  gens <- get_generating(panicle)
+  # that have no parent nodes in its neighbors
+  parents <-
+    gens %>%
+    purrr::map(
+      ~igraph::neighbors(panicle,
+                         v = .,
+                         mode = "in")
+      )
+
+  print(parents %>% purrr::map_int(length))
+  gens[which(
+    parents %>% purrr::map_int(length) == 0
+    )]
+}
+
 #' Turn a Panicle Graph in a Tibble useful for a dotplot
 #'
 #' @param panicle a panicle graph.
 
 panicle_tibble <- function(panicle,
                            start,
-                           to) {
+                           to
+                           ) {
   main_path <-
     panicle %>%
     igraph::shortest_paths(from = start,
