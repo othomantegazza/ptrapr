@@ -18,7 +18,7 @@ pull_branch <- function(panicle,
 
   sub_graph <-
     panicle %>%
-    induced_subgraph(sub_verts)
+    igraph::induced_subgraph(sub_verts)
 }
 
 #' Make a Tibble with the Vetex ID of the Longest Path
@@ -72,7 +72,7 @@ make_idline <- function(branch,
   # branch...
   node_types <-
     branch %>%
-    vertex_attr() %>%
+    igraph::vertex_attr() %>%
     .$type
   # ...ranked along the nodes in the main axis of the
   # branch
@@ -98,11 +98,13 @@ make_idline <- function(branch,
 get_generating <- function(panicle) {
   panicle %>%
     igraph::as_long_data_frame() %>%
-    filter(.data$from_type == "Generating") %>%
-    select(.data$from_x, .data$from_rank) %>%
-    distinct() %>%
-    arrange(desc(.data$from_x)) %>%
-    pull(from_rank)
+    dplyr::filter(.data$from_type == "Generating") %>%
+    dplyr::select(.data$from_x, .data$from_rank) %>%
+    dplyr::distinct() %>%
+    dplyr::arrange(
+      dplyr::desc(.data$from_x)
+      ) %>%
+    dplyr::pull(from_rank)
 }
 
 #' Turn a Panicle Graph in a Tibble useful for a dotplot
@@ -137,27 +139,27 @@ panicle_tibble <- function(panicle,
     purrr::map(not_primary) %>%
     .[1:9]
 
-  tb <- tibble(vert_rank = branch_starts,
+  tb <- tibble::tibble(vert_rank = branch_starts,
                branch = branch_starts %>%
                  purrr::map(
                    ~pull_branch(panicle = panicle,
                                 vert = .))
     )
 
-  print(tb)
+  # print(tb)
 
   tb_list <-
     tb %>%
-    pmap(make_idline) %>%
+    purrr::pmap(make_idline) %>%
     .[-3] %>%
-    map(
-      ~tibble(type = .,
+    purrr::map(
+      ~tibble::tibble(type = .,
               rank = 1:length(.))
     )
 
   tb_list <-
   1:length(tb_list) %>%
-    map(~mutate(tb_list[[.]], y = .))
+    purrr::map(~dplyr::mutate(tb_list[[.]], y = .))
 
   tb_list %>% purrr::reduce(dplyr::bind_rows)
 
