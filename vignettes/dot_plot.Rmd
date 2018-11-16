@@ -91,7 +91,7 @@ Let's continue on the `good_panicle` graph.
 
 # Inspect Branching with a Dot Plot
 
-In order to visualize and inspect primary and secondary branching, we suggest you to represent your data with a dotplot. We have learned about this representation in [this paper by ](). We suggest this plot because it highlights number and position of primary and secondary branches in a direct and intuitive way.
+In order to visualize and inspect primary and secondary branching, we suggest you to represent your data with a tiled plot. We have learned about this representation in [this paper by Fujishiro et al.](https://www.nature.com/articles/s41598-018-30395-9). We suggest this plot because it highlights the number and position of primary and secondary branches in a direct and intuitive way.
 
 To achieve this, first you will have to extract features from the panicle graph and put them in a data frame
 
@@ -109,7 +109,7 @@ You can use the `panicle_tibble()` function to get a dataframe that stores three
 
 - **`primary`**: the rank of the primary branch (the lower ranking branch are closer to base of the panicle).
 - **`type`**: Along that primary branch, the identity of each node. (Secondary, Spikelet or End).
-- **rank**: Along that primary branch, the rank of each node.
+- **`rank`**: Along that primary branch, the rank of each node.
 
 # Visulize with a dotplot
 
@@ -119,8 +119,8 @@ This dataframe is ready to be visualized with `ggplot2`.
 pan_tibble %>% 
   ggplot(aes(x = node_rank,
              y = primary_rank,
-             colour = type)) +
-  geom_point(size = 10) + 
+             fill = type)) +
+  geom_tile(colour = "grey70", size = 2) + 
   theme_bw()
 
 ```
