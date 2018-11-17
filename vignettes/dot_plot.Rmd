@@ -105,13 +105,30 @@ pan_tibble <-
   panicle_tibble()
 ```
 
+```{r}
+plots <- pan_tibble %>%
+  purrr::map(., ~subcomponent(graph = good_panicle, v = ., mode = "out") %>%
+  {induced.subgraph(graph = good_panicle, vids = .)} %>%
+  ggraph() + 
+  geom_edge_link(arrow = grid::arrow(length = unit(0.08,
+                                                   "inches"),
+                                     type = "closed"),
+                 colour = "grey30") +
+  geom_node_point(aes(colour = type),
+                  size = 2,
+                  alpha =.7) +
+  coord_fixed() +
+  theme_minimal())
+```
+
+
 You can use the `panicle_tibble()` function to get a dataframe that stores three variables:
 
 - **`primary`**: the rank of the primary branch (the lower ranking branch are closer to base of the panicle).
 - **`type`**: Along that primary branch, the identity of each node. (Secondary, Spikelet or End).
 - **`rank`**: Along that primary branch, the rank of each node.
 
-# Visulize with a dotplot
+# Visulize with a tileplot
 
 This dataframe is ready to be visualized with `ggplot2`.
 

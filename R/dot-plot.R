@@ -168,33 +168,55 @@ panicle_tibble <- function(panicle)
   # I need a way to select neighbours
   # with any other attribute than primary
   not_primary <- function(v) {
+    #
+
+    # get the neighborough nodes
     nb <- igraph::neighbors(graph = panicle,
-                      v = v,
-                      mode = "out")
+                            v = v,
+                            mode = "out")
+    # and its attributes
     nb_attr <- igraph::vertex_attr(graph = panicle,
                                    index = nb)
-    keep <- nb$type != "Primary"
+    keep <- nb$type != "Primary" & nb$type != "Generating"
+    # scaffold
+    nb[keep] %>% as.numeric() %>% print()
+
     nb[keep] %>% as.numeric()
   }
 
   branch_starts <-
     main_path %>%
-    purrr::map(not_primary) %>%
-    .[1:9]
+    purrr::map(not_primary) # %>%
+    # Kludge!!!!!!
+    # .[1:9]
+
+  # scaffold
+  # return(branch_starts)
+
+
+  #scaffold
+  # tb
 
   tb <- tibble::tibble(vert_rank = branch_starts,
-               branch = branch_starts %>%
-                 purrr::map(
-                   ~pull_branch(panicle = panicle,
-                                vert = .))
+                       branch = branch_starts %>%
+                         purrr::map(
+                           ~pull_branch(panicle = panicle,
+                                        vert = .))
     )
 
-  # print(tb)
+  # scaffold
+  # print("a")
+  # return(tb)
 
   tb_list <-
     tb %>%
-    purrr::pmap(make_idline) %>%
-    .[-3] %>%
+    purrr::pmap(make_idline) #%>% scaffold
+    # kludge
+    # .[-3] %>%
+
+  # scaffold
+  return(tb_list)
+
     purrr::map(
       ~tibble::tibble(type = .,
               node_rank = 1:length(.))

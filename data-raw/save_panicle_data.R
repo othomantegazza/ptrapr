@@ -113,4 +113,4 @@ if(FALSE) {
   plot_p(inverted_panicle)
 }
 
-use_data(good_panicle, inverted_panicle)
+usethis::use_data(good_panicle, inverted_panicle, overwrite = TRUE)

@@ -68,6 +68,12 @@ add_grain <- function(panicle_graph,
                                 new_vn, as.numeric(graph_long[nearest_edge, "to"])))
 
 
+  # the new vertexes need a rank
+  # for the function get_idline to work
+  vattr <- igraph::vertex_attr(new_graph)
+  vattr$rank[is.na(vattr$rank)] <- (max(vattr$rank, na.rm = T) + 1):length(vattr$rank)
+  igraph::vertex_attr(new_graph) <- vattr
+
   return(new_graph)
 }
 
