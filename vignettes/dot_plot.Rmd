@@ -105,8 +105,9 @@ pan_tibble <-
   panicle_tibble()
 ```
 
-```{r}
-plots <- pan_tibble %>%
+```{r, eval=FALSE}
+plots <- 
+  pan_tibble %>%
   purrr::map(., ~subcomponent(graph = good_panicle, v = ., mode = "out") %>%
   {induced.subgraph(graph = good_panicle, vids = .)} %>%
   ggraph() + 

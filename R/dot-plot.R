@@ -210,12 +210,12 @@ panicle_tibble <- function(panicle)
 
   tb_list <-
     tb %>%
-    purrr::pmap(make_idline) #%>% scaffold
+    purrr::pmap(make_idline) %>%
     # kludge
     # .[-3] %>%
 
   # scaffold
-  return(tb_list)
+  # return(tb_list)
 
     purrr::map(
       ~tibble::tibble(type = .,
