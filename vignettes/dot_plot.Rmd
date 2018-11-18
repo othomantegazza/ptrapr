@@ -25,6 +25,9 @@ library(igraph)
 library(ggraph)
 library(ptrapr)
 
+# color palette
+library(ghibli)
+
 # ggplot2 theme minimal fits better with graphs
 theme_set(theme_minimal())
 
@@ -76,7 +79,8 @@ You can understand this better by looking at the panicle graphs: we provide a pa
 We can see this comparing the graphs. This is the `good_panicle` graph:
  
 ```{r}
-good_panicle %>% plot_panicle()
+good_panicle %>%
+  plot_panicle()
 ```
 
 Compare the previous graph with the one below, repersenting the `inverted_panicle` object. In the graph below, the edges on the main axis are inverted.
@@ -105,24 +109,6 @@ pan_tibble <-
   panicle_tibble()
 ```
 
-```{r, eval=FALSE}
-plots <- 
-  pan_tibble %>%
-  purrr::map(., ~subcomponent(graph = good_panicle, v = ., mode = "out") %>%
-  {induced.subgraph(graph = good_panicle, vids = .)} %>%
-  ggraph() + 
-  geom_edge_link(arrow = grid::arrow(length = unit(0.08,
-                                                   "inches"),
-                                     type = "closed"),
-                 colour = "grey30") +
-  geom_node_point(aes(colour = type),
-                  size = 2,
-                  alpha =.7) +
-  coord_fixed() +
-  theme_minimal())
-```
-
-
 You can use the `panicle_tibble()` function to get a dataframe that stores three variables:
 
 - **`primary`**: the rank of the primary branch (the lower ranking branch are closer to base of the panicle).
@@ -138,8 +124,10 @@ pan_tibble %>%
   ggplot(aes(x = node_rank,
              y = primary_rank,
              fill = type)) +
-  geom_tile(colour = "grey70", size = 2) + 
-  theme_bw()
-
+  geom_tile(colour = "grey80",
+            size = 2) +
+  scale_fill_manual(
+    values = ghibli_palette("MarnieMedium1")[3:5]
+  )
 ```
 

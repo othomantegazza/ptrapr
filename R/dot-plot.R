@@ -178,24 +178,14 @@ panicle_tibble <- function(panicle)
     nb_attr <- igraph::vertex_attr(graph = panicle,
                                    index = nb)
     keep <- nb$type != "Primary" & nb$type != "Generating"
-    # scaffold
-    nb[keep] %>% as.numeric() %>% print()
 
     nb[keep] %>% as.numeric()
   }
 
   branch_starts <-
     main_path %>%
-    purrr::map(not_primary) # %>%
-    # Kludge!!!!!!
-    # .[1:9]
+    purrr::map(not_primary)
 
-  # scaffold
-  # return(branch_starts)
-
-
-  #scaffold
-  # tb
 
   tb <- tibble::tibble(vert_rank = branch_starts,
                        branch = branch_starts %>%
@@ -204,19 +194,9 @@ panicle_tibble <- function(panicle)
                                         vert = .))
     )
 
-  # scaffold
-  # print("a")
-  # return(tb)
-
   tb_list <-
     tb %>%
     purrr::pmap(make_idline) %>%
-    # kludge
-    # .[-3] %>%
-
-  # scaffold
-  # return(tb_list)
-
     purrr::map(
       ~tibble::tibble(type = .,
               node_rank = 1:length(.))
@@ -227,19 +207,4 @@ panicle_tibble <- function(panicle)
     purrr::map(~dplyr::mutate(tb_list[[.]], primary_rank = .))
 
   tb_list %>% purrr::reduce(dplyr::bind_rows)
-
-
-  # purrr::map(
-  #   ~make_idline()
-  #   )
-  # main_path %>%
-  #   purrr::map(
-  #     ~igraph::neighbors(graph = panicle,
-  #                        v = .,
-  #                        mode = "out")
-  #     ) %>%
-  #   map(
-  #     ~vertex_attr(graph = panicle,
-  #                  index = .)
-  #     )
 }

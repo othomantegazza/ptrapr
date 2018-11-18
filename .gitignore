@@ -12,3 +12,5 @@ docs/*
 
 # parsed data
 data/*
+
+vignettes/.build.timestamp
