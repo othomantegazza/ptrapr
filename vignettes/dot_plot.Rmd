@@ -67,20 +67,21 @@ data(inverted_panicle)
 
 # Check the direction of the edges (Branches)
 
-Sometimes, the direction ofthe edges in the graphs produced with ptrap are not correct.
+Sometimes, the direction of the edges in the graphs produced with ptrap are not correct.
 
 Every edge corrispond to the part of a branch that connect one node to another. By convention each edge should be directed outward: pointing from the node closer to the base of the panicle to the one further away.
 
-You can understand this better by looking at the panicle graphs: we provide a panicle two panicle graph objects:
+You can understand this better by looking at the panicle graphs: we provide two panicle graph objects:
 
 - One named `good_panicle` in which every edge points outward.
 - One named `inverted_panicle` in which the edges on the main rachis axis point inward.
 
-We can see this comparing the graphs. This is the `good_panicle` graph:
- 
+We can see this comparing the graphs. 
+
+The `good_panicle` graph has no inverted edges: 
+
 ```{r}
-good_panicle %>%
-  plot_panicle()
+good_panicle %>% plot_panicle()
 ```
 
 Compare the previous graph with the one below, repersenting the `inverted_panicle` object. In the graph below, the edges on the main axis are inverted.
@@ -89,7 +90,7 @@ Compare the previous graph with the one below, repersenting the `inverted_panicl
 inverted_panicle %>% plot_panicle()
 ```
 
-We suggest you to inspect your data, and if some of the edges are inverted, you can learn how to correct them in the vignette "How to Invert Edges".
+We suggest you to inspect your data, and if some of the edges are inverted, you can learn how to correct them in the vignette "Why and How to Invert Edges".
 
 Let's continue on the `good_panicle` graph.
 

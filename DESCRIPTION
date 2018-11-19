@@ -20,9 +20,12 @@ Imports:
     igraph,
     sp,
     rgeos,
-    magrittr
+    magrittr,
+    tidygraph
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    ggraph,
+    ggplot2
 VignetteBuilder: knitr
 RoxygenNote: 6.1.0

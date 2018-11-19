@@ -1,60 +1,63 @@
 ---
-title: "Vignette Title"
-author: "Vignette Author"
+title: "Why and How to Invert Edges"
+author: "Otho Mantegazza"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Invert edges on main axis}
+  %\VignetteIndexEntry{Why and How to Invert Edges}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   chunk_output_type: console
 ---
 
-```{r}
-library(ptrapr)
+# Set up
+
+```{r, message = FALSE}
+library(igraph)
 library(ggraph)
 library(magrittr)
-library(igraph)
+library(ptrapr)
 ```
+
+# Issue - direction of the edges in ptrapr output
+
+Sometimes, the direction of the edges in the graphs produced with ptrap is inverted.
+
+Every edge corrispond to the part of a branch that connect one node to another. By convention each edge should be directed outward: pointing from the node closer to the base of the panicle to the one further away.
+
+You can understand this better by looking at the panicle graphs: we proveide two panicle graph objects:
+
+- One named `good_panicle` in which every edge points outward.
+- One named `inverted_panicle` in which the edges on the main rachis axis point inward.
+
+We can see this comparing the graphs. 
+
+The `good_panicle` graph has no inverted edges:
+ 
+```{r}
+good_panicle %>% plot_panicle()
+```
+
+Compare the previous graph with the one below, repersenting the `inverted_panicle` object. In the graph below, the edges on the main axis are inverted.
 
 ```{r}
-path <- system.file("extdata/Nip_2_3_6312.ricepr", 
-                   package = "ptrapr") 
-
-
-path %>% 
-  read_panicle() %>%
-  ggraph() + 
-  geom_edge_link(arrow = grid::arrow(length = unit(0.08,
-                                                   "inches"),
-                                     type = "closed"),
-                 colour = "grey30") +
-  geom_node_point(aes(colour = type),
-                  size = 2,
-                  alpha =.7) +
-  coord_fixed() +
-  theme_minimal()
+inverted_panicle %>% plot_panicle()
 ```
+
+# Invert edges with `invert_edges()`
+
+If you find a panicle with inverted edges on the main axis, you can use the function `invert_edges()` to revert them.
 
 ```{r}
+tst <- inverted_panicle %>% invert_edges()
+tst %>% plot_panicle()
+``` 
 
-path <- system.file("extdata/Nip_1_3_6309.ricepr", 
-                   package = "ptrapr") 
 
+# Details
 
-path %>% 
-  read_panicle() %>%
-  ggraph() + 
-  geom_edge_link(arrow = grid::arrow(length = unit(0.08,
-                                                   "inches"),
-                                     type = "closed"),
-                 colour = "grey30") +
-  geom_node_point(aes(colour = type),
-                  size = 2,
-                  alpha =.7) +
-  coord_fixed() +
-  theme_minimal()
-```
+- The main axis is defined as all the edges between nodes with both type "Generating" or "Primary"
 
-Some are inverted and some are not.
+- 
+
