@@ -1,0 +1,70 @@
+---
+title: "Test"
+author: "Otho Mantegazza"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Test}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r, eval = FALSE}
+# Not sure why I need to load all those packages manually
+library(ptrapr)
+library(dplyr)
+library(ggplot2)
+library(magrittr)
+library(stringr)
+library(purrr)
+library(ggraph)
+
+
+# all panicle files are in extdata
+panicle_paths <- 
+  system.file(package = "ptrapr") %>%
+  paste0("/extdata") %>%
+  list.files(full.names = TRUE) %>%
+  # remove the extension (variable part)
+  # each panicle has two files with different extension
+  str_remove("ricegr|ricepr") %>%
+  unique()
+
+# parse them at once
+panicles <- 
+  panicle_paths %>%
+  map(~read_full_panicle(pr_file = paste0(., "ricepr"), 
+                     gr_file = paste0(., "ricegr")))
+
+# plot them all
+plot_panicle <- function(panicle)
+  {
+  p <- 
+  panicle %>%
+    ggraph(layout = "nicely") +
+    geom_edge_link(arrow = grid::arrow(length = unit(0.08,
+                                                     "inches"),
+                                       type = "closed"),
+                   colour = "grey30") +
+    geom_node_point(aes(colour = type),
+                    size = 2,
+                    alpha =.7) +
+    coord_fixed() +
+    theme_minimal()
+
+  # print plot
+  p
+}
+
+panicles %>% map(plot_panicle)
+```
+
