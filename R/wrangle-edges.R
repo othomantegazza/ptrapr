@@ -11,6 +11,26 @@
 invert_edges <- function(panicle_graph,
                          check_before = FALSE)
 {
+  if(check_before) {
+    # Detect the base generating vertex as the vertex
+    # with type generating with the highest y
+    gen <-
+      panicle_graph %>%
+      igraph::as_long_data_frame() %>%
+      dplyr::filter(.data$from_type %in% c("Generating"))
+
+    gen_vert <- gen[which.max(gen$from_x), "from_rank"]
+
+    # being the start point, that vertex is not expected
+    # to have incoming edges
+    gen_neighbors <-
+      panicle_graph %>%
+      igraph::neighbors(v = gen_vert, mode = "in")
+
+    if(length(gen_neighbors) == 0) {
+      return(panicle_graph)
+    }
+  }
   # Get the ranks of all the nodes on the primary axis
   # the primary axis is defined as all the edges that
   # start from a vertex with type "Primary" or "Generating"

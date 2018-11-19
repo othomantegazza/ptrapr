@@ -52,6 +52,15 @@ If you find a panicle with inverted edges on the main axis, you can use the func
 ```{r}
 tst <- inverted_panicle %>% invert_edges()
 tst %>% plot_panicle()
+
+
+inverted_panicle %>%
+  invert_edges(check_before = TRUE) %>%
+  plot_panicle()
+
+good_panicle %>%
+  invert_edges(check_before = TRUE) %>%
+  plot_panicle()
 ``` 
 
 
