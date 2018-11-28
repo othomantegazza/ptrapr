@@ -96,7 +96,7 @@ tileplot_branch <- function(pan_tbl) {
 # THIS DOES NOT WORK
 panicle_fixed[[4]] %>% plot_panicle()
 panicle_fixed[[4]] %>% as_long_data_frame()
-tst <- panicle_fixed[[4]] %>% panicle_tibble(silently = FALSE) #%>% tileplot_branch()
+panicle_fixed[[4]] %>% panicle_tibble(silently = FALSE) #%>% tileplot_branch()
 
 # THIS gives a warning
 panicle_fixed[[5]] %>% panicle_tibble() #%>% tileplot_branch()
@@ -109,5 +109,21 @@ panicle_fixed %>%
   map(panicle_tibble) %>%
   map(tileplot_branch)
   
+
+pdf(file = "docs/figs/test_pans.pdf",
+    width = 30,
+    height = 18)
+panicle_fixed %>%
+  map(
+    ~list(plot_panicle(.) %>% ggplotGrob(),
+          panicle_tibble(.) %>% tileplot_branch() %>% ggplotGrob())
+  ) %>%
+  map(~cowplot::plot_grid(plotlist = ., nrow = 2))
+dev.off()
+
+
+# This one has a spikelet before a branch
+panicle_fixed[[8]] %>% plot_panicle()
+panicle_fixed[[8]] %>% panicle_tibble() %>% tileplot_branch()
 ```
 
