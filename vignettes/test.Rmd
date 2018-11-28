@@ -18,15 +18,16 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r, eval = FALSE}
+```{r}
 # Not sure why I need to load all those packages manually
-library(ptrapr)
 library(dplyr)
+library(igraph)
 library(ggplot2)
 library(magrittr)
 library(stringr)
 library(purrr)
 library(ggraph)
+library(ptrapr)
 
 
 # all panicle files are in extdata
@@ -66,5 +67,47 @@ plot_panicle <- function(panicle)
 }
 
 panicles %>% map(plot_panicle)
+
+# panicles %>% 
+#   map(~invert_edges(.,check_before = TRUE)) %>%
+#   map(plot_panicle)
+```
+
+```{r}
+panicle_fixed <- 
+  panicles %>% 
+  map(~invert_edges(.,check_before = TRUE))
+```
+
+```{r}
+tileplot_branch <- function(pan_tbl) {
+  p <- 
+    pan_tbl %>% 
+  ggplot(aes(x = node_rank,
+             y = primary_rank,
+             fill = type)) +
+  geom_tile(colour = "grey80",
+            size = 2) 
+  
+    p %>% print
+}
+
+
+# THIS DOES NOT WORK
+panicle_fixed[[4]] %>% plot_panicle()
+panicle_fixed[[4]] %>% as_long_data_frame()
+tst <- panicle_fixed[[4]] %>% panicle_tibble(silently = FALSE) #%>% tileplot_branch()
+
+# THIS gives a warning
+panicle_fixed[[5]] %>% panicle_tibble() #%>% tileplot_branch()
+
+# the others look fine, but check better, compare figures
+panicle_fixed[[9]] %>% panicle_tibble() %>% tileplot_branch()
+
+
+panicle_fixed %>%
+  map(panicle_tibble) %>%
+  map(tileplot_branch)
+  
 ```
 

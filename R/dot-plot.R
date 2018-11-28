@@ -143,7 +143,8 @@ get_base <- function(panicle) {
 #'
 #' @export
 
-panicle_tibble <- function(panicle)
+panicle_tibble <- function(panicle,
+                           silently = TRUE)
   {
   # get the generating node
   gens <- get_generating(panicle)
@@ -186,6 +187,31 @@ panicle_tibble <- function(panicle)
     main_path %>%
     purrr::map(not_primary)
 
+  #scaffold
+  print(branch_starts)
+
+  # sometimes two branches start from the same node
+  # This solves it by arbitrarily splitting that node
+  # in two
+  if(!silently) {
+    double_branches <-
+      branch_starts %>%
+      purrr::map_dbl(length) %>%
+      {which(. > 1)}
+    if(length(double_branches > 0))
+      paste("Multiple branches detected on node:", double_branches,
+            "\n This node was split in multiple nodes") %>%
+      message()
+
+  }
+  branch_starts <-
+    branch_starts %>%
+    purrr::flatten_dbl()
+
+
+  # scaffold
+  # return(branch_starts)
+
 
   tb <- tibble::tibble(vert_rank = branch_starts,
                        branch = branch_starts %>%
@@ -194,9 +220,14 @@ panicle_tibble <- function(panicle)
                                         vert = .))
     )
 
+  # scaffold
+  return(tb)
+
+  if(!silently) {print(tb)}
+
   tb_list <-
     tb %>%
-    purrr::pmap(make_idline) %>%
+    purrr::pmap(make_idline) %>% print # scaffold
     purrr::map(
       ~tibble::tibble(type = .,
               node_rank = 1:length(.))
