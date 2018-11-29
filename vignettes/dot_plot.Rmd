@@ -30,26 +30,6 @@ library(ghibli)
 
 # ggplot2 theme minimal fits better with graphs
 theme_set(theme_minimal())
-
-# set a convenience wrapper to visualize panicle graphs
-plot_panicle <- function(panicle)
-  {
-  p <- 
-  panicle %>%
-    ggraph(layout = "nicely") +
-    geom_edge_link(arrow = grid::arrow(length = unit(0.08,
-                                                     "inches"),
-                                       type = "closed"),
-                   colour = "grey30") +
-    geom_node_point(aes(colour = type),
-                    size = 2,
-                    alpha =.7) +
-    coord_fixed() +
-    theme_minimal()
-
-  # print plot
-  p
-  }
 ```
 
 # Intro / get data

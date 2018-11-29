@@ -7,9 +7,9 @@ library(dplyr)
 # Read good panicle file --------------------------------------------------
 
 good_p_path <- list(
-  stucture = system.file("extdata/Nip_3_3_6315.ricepr",
+  stucture = system.file("extdata/3_3_6315.ricepr",
                          package = "ptrapr"),
-  grains = system.file("extdata/Nip_3_3_6315.ricegr",
+  grains = system.file("extdata/3_3_6315.ricegr",
                        package = "ptrapr")
 )
 
@@ -24,9 +24,9 @@ good_panicle <-
 # Read Panicle with inverted edges ----------------------------------------
 
 inverted_p_path <- list(
-  stucture = system.file("extdata/Nip_1_1_6307.ricepr",
+  stucture = system.file("extdata/1_1_6307.ricepr",
                          package = "ptrapr"),
-  grains = system.file("extdata/Nip_1_1_6307.ricegr",
+  grains = system.file("extdata/1_1_6307.ricegr",
                        package = "ptrapr")
 )
 

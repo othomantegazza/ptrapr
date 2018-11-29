@@ -59,7 +59,7 @@ The structure and topology of the panicle is stored in the `.ricepr` XML file.
 You can test the `read_panicle()` function on one of the `.ricepr` files included in this package.
 
 ```{r}
-path <- system.file("extdata/Nip_1_1_6307.ricepr", 
+path <- system.file("extdata/1_1_6307.ricepr", 
                    package = "ptrapr") 
 
 panicle <-
@@ -91,7 +91,7 @@ panicle %>%
 Likewise, we provide a sample `.ricegr` file. This file stores coordinates for all the grains on the panicle, but no structual / topological information.
 
 ```{r}
-grain_path <- system.file("extdata/Nip_1_1_6307.ricegr",
+grain_path <- system.file("extdata/1_1_6307.ricegr",
                           package = "ptrapr")
 
 grains <- 
