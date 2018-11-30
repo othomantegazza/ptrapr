@@ -13,8 +13,6 @@
 #' @param gr_file The path to the `.ricegr` file,
 #'  (which stores the coordinates of grains)
 #'
-#' @importFrom magrittr %>%
-#' @importFrom rlang .data
 #' @export
 
 read_full_panicle <- function(pr_file,

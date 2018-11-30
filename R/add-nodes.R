@@ -1,3 +1,5 @@
+utils::globalVariables(".")
+
 #' Add a Grain to the Closest Branch
 #'
 #'

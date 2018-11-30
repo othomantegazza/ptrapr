@@ -107,7 +107,7 @@ get_generating <- function(panicle) {
     dplyr::arrange(
       dplyr::desc(.data$from_x)
       ) %>%
-    dplyr::pull(from_rank)
+    dplyr::pull(.data$from_rank)
 }
 
 #' Get the node at the base of the panicle
