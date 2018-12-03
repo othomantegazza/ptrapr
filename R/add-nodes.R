@@ -11,7 +11,7 @@ utils::globalVariables(".")
 
 
 add_grain <- function(panicle_graph,
-                         new_vert = numeric(2))
+                      new_vert = numeric(2))
 {
 
   # new_vert in format c(x, y)
@@ -81,9 +81,14 @@ add_grain <- function(panicle_graph,
 
 #' Merge all grains into graph
 #'
+#' @param graph_base A panicle graph produced by `read_panicle()`
+#'     to which you haven't added spikelets yet
+#' @param grains A grains dataframe produced by `read_grains()`
+#'
 #' @export
 
-add_all_grains <- function(graph_base, grains)
+add_all_grains <- function(graph_base,
+                           grains)
 {
   # spikelets <- seeds
   # graph_base <- tst

@@ -8,6 +8,9 @@ panicle_tibble(panicle, silently = TRUE)
 }
 \arguments{
 \item{panicle}{a panicle graph.}
+
+\item{silently}{logical, if `FALSE` prints intermediate data
+while producing the panicle tibble. Defaults to `TRUE`.}
 }
 \description{
 Turn a Panicle Graph in a Tibble useful for a dotplot

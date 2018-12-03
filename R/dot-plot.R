@@ -140,6 +140,8 @@ get_base <- function(panicle) {
 #' Turn a Panicle Graph in a Tibble useful for a dotplot
 #'
 #' @param panicle a panicle graph.
+#' @param silently logical, if `FALSE` prints intermediate data
+#'     while producing the panicle tibble. Defaults to `TRUE`.
 #'
 #' @export
 

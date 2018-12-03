@@ -1,10 +1,10 @@
 ---
-title: "Visualize The Structure of a Panicle"
+title: "03 - Visualize The Structure of a Panicle"
 author: "Otho Mantegazza"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Visualize The Structure of a Panicle}
+  %\VignetteIndexEntry{03 - Visualize The Structure of a Panicle}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

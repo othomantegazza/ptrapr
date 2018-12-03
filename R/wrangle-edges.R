@@ -46,7 +46,7 @@ invert_edges <- function(panicle_graph,
   # tbl_graph has the very convinient method activate()
   panicle_graph %>%
     tidygraph::as_tbl_graph() %>%
-    tidygraph::activate(.data$edges) %>%
+    tidygraph::activate("edges") %>%
     tidygraph::reroute(
       from = dplyr::case_when(from %in% prim_gen$from &
                                 to %in% prim_gen$to ~ to,

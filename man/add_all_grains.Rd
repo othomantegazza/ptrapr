@@ -6,6 +6,12 @@
 \usage{
 add_all_grains(graph_base, grains)
 }
+\arguments{
+\item{graph_base}{A panicle graph produced by `read_panicle()`
+to which you haven't added spikelets yet}
+
+\item{grains}{A grains dataframe produced by `read_grains()`}
+}
 \description{
 Merge all grains into graph
 }
