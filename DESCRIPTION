@@ -12,6 +12,8 @@ Description: With this package you can analyze the architecture and topology
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
+Depends:
+    R (>= 3.4.4)
 Imports: 
     magrittr (>= 1.5),
     rlang (>= 0.3.0),
