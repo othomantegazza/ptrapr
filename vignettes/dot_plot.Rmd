@@ -25,9 +25,6 @@ library(igraph)
 library(ggraph)
 library(ptrapr)
 
-# color palette
-library(ghibli)
-
 # ggplot2 theme minimal fits better with graphs
 theme_set(theme_minimal())
 ```
@@ -106,9 +103,6 @@ pan_tibble %>%
              y = primary_rank,
              fill = type)) +
   geom_tile(colour = "grey80",
-            size = 2) +
-  scale_fill_manual(
-    values = ghibli_palette("MarnieMedium1")[3:5]
-  )
+            size = 2) 
 ```
 
