@@ -6,10 +6,5 @@ inst/doc
 .RData
 .Ruserdata
 
-# extdata
-inst/extdata/*
-# website
-docs/*
-# parsed data
-data/*
+# vignette stuff
 vignettes/.build.timestamp
