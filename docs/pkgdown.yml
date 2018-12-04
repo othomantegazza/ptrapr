@@ -1,0 +1,11 @@
+pandoc: 1.19.2.1
+pkgdown: 1.1.0
+pkgdown_sha: ~
+articles:
+  deal-with-graphs: deal-with-graphs.html
+  dot_plot: dot_plot.html
+  graph_compendium: graph_compendium.html
+  load_files: load_files.html
+  test: test.html
+  why-invert-edges: why-invert-edges.html
+
