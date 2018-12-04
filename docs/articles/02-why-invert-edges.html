@@ -52,13 +52,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/dot_plot.html">03 - Visualize The Structure of a Panicle</a>
+      <a href="../articles/01-load-files.html">01 - Load Panicles Files Into R</a>
     </li>
     <li>
-      <a href="../articles/load_files.html">01 - Load Panicles Files Into R</a>
+      <a href="../articles/02-why-invert-edges.html">02 - Why and How to Invert Edges</a>
     </li>
     <li>
-      <a href="../articles/why-invert-edges.html">02 - Why and How to Invert Edges</a>
+      <a href="../articles/03-dot-plot.html">03 - Visualize The Structure of a Panicle</a>
     </li>
   </ul>
 </li>
@@ -81,7 +81,7 @@
             <h4 class="date">2018-12-04</h4>
       
       
-      <div class="hidden name"><code>why-invert-edges.Rmd</code></div>
+      <div class="hidden name"><code>02-why-invert-edges.Rmd</code></div>
 
     </div>
 
@@ -109,10 +109,10 @@
 <p>We can see this comparing the graphs.</p>
 <p>The <code>good_panicle</code> graph has no inverted edges:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">good_panicle <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/plot_panicle.html">plot_panicle</a></span>()</code></pre></div>
-<p><img src="why-invert-edges_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
+<p><img src="02-why-invert-edges_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
 <p>Compare the previous graph with the one below, repersenting the <code>inverted_panicle</code> object. In the graph below, the edges on the main axis are inverted.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">inverted_panicle <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/plot_panicle.html">plot_panicle</a></span>()</code></pre></div>
-<p><img src="why-invert-edges_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<p><img src="02-why-invert-edges_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 </div>
 <div id="invert-edges-with-invert_edges" class="section level1">
 <h1 class="hasAnchor">
@@ -121,15 +121,15 @@
 <p>If you find a panicle with inverted edges on the main axis, you can use the function <code><a href="../reference/invert_edges.html">invert_edges()</a></code> to revert them.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tst &lt;-<span class="st"> </span>inverted_panicle <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/invert_edges.html">invert_edges</a></span>()
 tst <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/plot_panicle.html">plot_panicle</a></span>()</code></pre></div>
-<p><img src="why-invert-edges_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<p><img src="02-why-invert-edges_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">inverted_panicle <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/invert_edges.html">invert_edges</a></span>(<span class="dt">check_before =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/plot_panicle.html">plot_panicle</a></span>()</code></pre></div>
-<p><img src="why-invert-edges_files/figure-html/unnamed-chunk-4-2.png" width="700"></p>
+<p><img src="02-why-invert-edges_files/figure-html/unnamed-chunk-4-2.png" width="700"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">good_panicle <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/invert_edges.html">invert_edges</a></span>(<span class="dt">check_before =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/plot_panicle.html">plot_panicle</a></span>()</code></pre></div>
-<p><img src="why-invert-edges_files/figure-html/unnamed-chunk-4-3.png" width="700"></p>
+<p><img src="02-why-invert-edges_files/figure-html/unnamed-chunk-4-3.png" width="700"></p>
 </div>
 <div id="details" class="section level1">
 <h1 class="hasAnchor">

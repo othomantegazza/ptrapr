@@ -1,0 +1,7 @@
+articles:
+- title: 01 - Load Panicles Files Into R
+  contents: 01-load-files
+- title: 02 - Why and How to Invert Edges
+  contents: 02-why-invert-edges
+- title: 03 - Visualize The Structure of a Panicle
+  contents: 03-dot-plot

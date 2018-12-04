@@ -1,10 +1,10 @@
 ---
-title: "01 - Load Panicles into R"
+title: "01 - Load Panicles Files Into R"
 author: "Otho Mantegazza"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{01 - Load Panicles into R}
+  %\VignetteIndexEntry{01 - Load Panicles Files Into R}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
