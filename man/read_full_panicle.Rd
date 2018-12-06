@@ -4,9 +4,15 @@
 \alias{read_full_panicle}
 \title{Read Graph of Panicle Structure and Seeds}
 \usage{
-read_full_panicle(pr_file, gr_file)
+read_full_panicle(base_path = NULL, pr_file, gr_file)
 }
 \arguments{
+\item{base_path}{The path to the panicle files without extension.
+Use this parameter only if the names of the panicle structure file
+and of the panicle structure files are the same, and they are in the
+same folder. The `base_path` parameter and the `pr_file` + `gr_file`
+parameters are mutually exclusive. Use the first, or the others.}
+
 \item{pr_file}{The path to the `.ricepr` file,
 (which stores the structure of a panicle)}
 
@@ -19,7 +25,12 @@ This is a convenient wrapper that read:
 file (which stores the structure of a panicle).
 - A a `.ricegr`
 file (which stores the coordinates of grains).
+And merges them together
 }
 \details{
-And merges them together
+If the name of the `.ricepr` and the `.ricegr` is the same,
+you can provide this name without extension to the parameter
+`base_path`. Otherwise, you can provide the path to the two
+files with their extensions to the parameters
+`pr_file` and `gr_file` .
 }
