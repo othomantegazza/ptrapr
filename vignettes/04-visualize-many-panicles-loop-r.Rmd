@@ -153,7 +153,7 @@ plot_both <- function(panicle_name,
 
 This is the final loop, that plots directly in a multipage pdf object.
 
-```{r}
+```{r, eval=FALSE}
 pdf("test-panicle-plots.pdf", width = 8, height = 12)
 
 panicle_list %>%
