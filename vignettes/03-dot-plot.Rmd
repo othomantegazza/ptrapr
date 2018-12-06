@@ -1,5 +1,5 @@
 ---
-title: "03 - Visualize The Structure of a Panicle"
+title: "03 - Visualize The Topology of a Panicle"
 author: "Otho Mantegazza"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette

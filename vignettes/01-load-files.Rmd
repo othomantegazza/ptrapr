@@ -48,28 +48,35 @@ A structure file:
 A grain file:
 : A second file, with extension `.ricegr`, store the xy coordinates of each spikelet.
 
-We have included examples of such files in this package. You can access these examples **online* [here](https://github.com/othomantegazza/ptrapr) or locally in the `ptrapr/extdata` folder [^find.package]
+We have included examples of those files in this package. You can access these examples [**online here**](https://github.com/othomantegazza/ptrapr) or locally in the folder `ptrapr/extdata` [^find.package].
 
 [^find.package]: Locate your local package folder with the function:: `find.package("ptrapr")`
  
 ## Read Panicle Structure with `read_panicle()`
 
-The structure and topology of the panicle is stored in the `.ricepr` XML file.
+The structure and topology of the panicle is stored in the `.ricepr` XML files.
 
-You can test the `read_panicle()` function on one of the `.ricepr` files included in this package.
+You can parse and load in R `.ricepr` files with the function `read_panicle()`.
+
+You can test the `read_panicle()` function on one of the `.ricepr` files included in this package:
 
 ```{r}
-path <- system.file("extdata/1_1_6307.ricepr", 
+# find the .ricepr file
+structure_path <- system.file("extdata/1_1_6307.ricepr", 
                    package = "ptrapr") 
 
+# parse
 panicle <-
-  path %>% 
+  structure_path %>% 
   read_panicle()
 ```
 
-We suggest that you visualize the panicle that you have loaded into R using [the package `ggraph`](https://www.ggplot2-exts.org/ggraph.html).
+(Note: use `system.file()` only if you want to access the sample XML files that
+we provide. If you want to parse your own files, just provide the path to your file to the)
 
-With a visual representation of the panicle graph, you can detect if that the XML files were parsed correctly.
+We suggest that you **visualize** and **inspect** the panicle that you have loaded into R using [the package `ggraph`](https://www.ggplot2-exts.org/ggraph.html).
+
+Besides checking that the structure resembles what you expect, check that all the edges point outward.
 
 For example:
 

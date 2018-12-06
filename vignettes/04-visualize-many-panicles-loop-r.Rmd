@@ -1,0 +1,169 @@
+---
+title: "04 - Visualize Many Panicles at Once With a Loop"
+author: "Otho Mantegazza"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{04 - Visualize Many Panicles at Once With a Loop}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Here you will learn how to visualize the structure and the topology of many panicles with a loop.
+
+There are many ways to achieve this, hereby we provide some ideas on how to do it. Feel free to modify and imporve the workflow that we propose. Feel free also to suggest us how to improve this workflow, to do so, contact us through issues and pull requests.
+
+# setup
+
+```{r, message=FALSE}
+library(ptrapr)
+library(magrittr)
+library(stringr)
+library(purrr)
+library(ggraph)
+library(ggplot2)
+library(cowplot)
+```
+
+
+# Place All files in one single folder
+
+Place the structure files (`.ricepr`) and their corrispective grain files (`ricegr`) of all the panicles that you want to analyze in one single folder. For every single panicle the name of the structure file and the name of the gr file must be exaclty the same (obviously beside the extension).
+
+That folder must contain nothing else.
+
+For all the files stored in one folder, we load their name in R in this way:
+
+```{r, echo = FALSE}
+path_to_folder <- system.file(package = "ptrapr") %>%
+  paste0("/extdata") 
+```
+
+
+```{r}
+# First record the names of the files
+# substitute path_to_folder with the path to your folder
+panicle_paths <- 
+  list.files(path_to_folder) %>%
+  # remove the extension (variable part)
+  # each panicle has two files with different extension
+  str_remove(".ricegr|.ricepr") %>%
+  # store the name of the files without the extension
+  unique()
+
+panicle_paths
+```
+
+We find it very useful to store the panicle names in a named object (such a named character vector). In this way the names are preserved through the loops.
+
+Here we use a `magrittr` trick to pass the LHS (left hand side) argument to the next function in anywhere we want it. To do this, enclose the RHS function in curly brackets and call the LHS with a dot ".".
+
+```{r}
+# Store file names in named object, to use them later
+panicle_paths <-
+  panicle_paths %>% 
+  {set_names(x = paste(path_to_folder, ., sep = "/"), nm = .)}
+```
+
+# Parse All Panicles
+
+Afterwards, you can loop the main worflow on the named `panicle_paths` object with `map()`. This function, from the package `purrr` is convenient because it loops over r objects preserving the names
+
+Here we show you how to loop the `ptrapr` workflow function by function. 
+
+First parse and load all the files with `read_full_panicle()`.
+
+```{r}
+# Parse them in a list, using file name as list names
+panicle_list <- 
+  panicle_paths %>%
+  map(~read_full_panicle(.)) 
+
+# alternative
+# panicle_list <- 
+#   panicle_paths %>%
+#   map(~read_full_panicle(
+#     pr_file = paste0(., ".ricepr"), 
+#     gr_file = paste0(., ".ricegr"))
+#     ) 
+```
+
+Then correct the edges on the main axis with `invert_edges()`
+ 
+```{r}
+panicle_list <- 
+  panicle_list %>% 
+  map(~invert_edges(., check_before = TRUE))
+```
+
+As you can see, `map()` preserves the names of `panicle_list`.
+
+```{r}
+names(panicle_list)
+```
+
+
+# Plot All the Panicles
+
+Then define a function to plot panicle, we suggest this one, but we encourage you to tweak it and improve it to your needs:
+
+```{r}
+tileplot_branch <- function(pan_tbl) {
+    pan_tbl %>% 
+    ggplot(aes(x = node_rank,
+               y = primary_rank,
+               fill = type)) +
+    geom_tile(colour = "grey80",
+              size = 2) 
+}
+```
+
+And wrap it in another function to plot together different visualisation of that panicle and to use the name of the panicle of as title of the plots.
+
+To use the name as title, you will have to loop over the names of `panicle_list` instead of the list itself.
+
+(If you want to master details and quirks of loops and iteration in R, you can [learn about them in here](https://adv-r.hadley.nz/functionals.html))
+
+```{r}
+plot_both <- function(panicle_name,
+                      p_list = panicle_list)
+{
+  # extract a panicle by name
+  panicle <- p_list[[panicle_name]]
+  
+  # plot the structure
+  panicle_structure_plot <-
+    panicle %>%
+    plot_panicle() + 
+    ggtitle(panicle_name)
+  
+  # plot the topology
+  panicle_topology_plot <- 
+    panicle %>% 
+    panicle_tibble(.) %>%
+    tileplot_branch() 
+    
+  panicle %>%
+  {list(panicle_structure_plot %>%
+          ggplotGrob(),
+        panicle_topology_plot %>%
+          ggplotGrob())}
+}
+```
+
+This is the final loop, that plots directly in a multipage pdf object.
+
+```{r}
+pdf("test-panicle-plots.pdf", width = 8, height = 12)
+
+panicle_list %>%
+  # loop over names, so that they can be used as plot titles
+  names() %>%
+  map(plot_both) %>% 
+  map(~cowplot::plot_grid(plotlist = .,
+                          nrow = 2)) %>%
+    print()
+
+dev.off()
+```
+
