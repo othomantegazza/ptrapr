@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ptrapr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.0.9001</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.1</span>
       </span>
     </div>
 
@@ -58,9 +58,15 @@
       <a href="../articles/02-why-invert-edges.html">02 - Why and How to Invert Edges</a>
     </li>
     <li>
-      <a href="../articles/03-dot-plot.html">03 - Visualize The Structure of a Panicle</a>
+      <a href="../articles/03-dot-plot.html">03 - Visualize The Topology of a Panicle</a>
+    </li>
+    <li>
+      <a href="../articles/04-visualize-many-panicles-loop-r.html">04 - Visualize Many Panicles at Once With a Loop</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
@@ -78,7 +84,7 @@
       <h1>01 - Load Panicles Files Into R</h1>
                         <h4 class="author">Otho Mantegazza</h4>
             
-            <h4 class="date">2018-12-04</h4>
+            <h4 class="date">2018-12-07</h4>
       
       
       <div class="hidden name"><code>01-load-files.Rmd</code></div>
@@ -113,21 +119,25 @@
 <dd>A second file, with extension <code>.ricegr</code>, store the xy coordinates of each spikelet.
 </dd>
 </dl>
-<p>We have included examples of such files in this package. You can access these examples **online* <a href="https://github.com/othomantegazza/ptrapr">here</a> or locally in the <code>ptrapr/extdata</code> folder <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<p>We have included examples of those files in this package. You can access these examples <a href="https://github.com/othomantegazza/ptrapr"><strong>online here</strong></a> or locally in the folder <code>ptrapr/extdata</code> <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>.</p>
 <div id="read-panicle-structure-with-read_panicle" class="section level2">
 <h2 class="hasAnchor">
 <a href="#read-panicle-structure-with-read_panicle" class="anchor"></a>Read Panicle Structure with <code><a href="../reference/read_panicle.html">read_panicle()</a></code>
 </h2>
-<p>The structure and topology of the panicle is stored in the <code>.ricepr</code> XML file.</p>
-<p>You can test the <code><a href="../reference/read_panicle.html">read_panicle()</a></code> function on one of the <code>.ricepr</code> files included in this package.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">path &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/1_1_6307.ricepr"</span>, 
+<p>The structure and topology of the panicle is stored in the <code>.ricepr</code> XML files.</p>
+<p>You can parse and load in R <code>.ricepr</code> files with the function <code><a href="../reference/read_panicle.html">read_panicle()</a></code>.</p>
+<p>You can test the <code><a href="../reference/read_panicle.html">read_panicle()</a></code> function on one of the <code>.ricepr</code> files included in this package:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># find the .ricepr file</span>
+structure_path &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/1_1_6307.ricepr"</span>, 
                    <span class="dt">package =</span> <span class="st">"ptrapr"</span>) 
 
+<span class="co"># parse</span>
 panicle &lt;-
-<span class="st">  </span>path <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>structure_path <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="../reference/read_panicle.html">read_panicle</a></span>()</code></pre></div>
-<p>We suggest that you visualize the panicle that you have loaded into R using <a href="https://www.ggplot2-exts.org/ggraph.html">the package <code>ggraph</code></a>.</p>
-<p>With a visual representation of the panicle graph, you can detect if that the XML files were parsed correctly.</p>
+<p>(Note: use <code>system.file()</code> only if you want to access the sample XML files that we provide. If you want to parse your own files, just provide the path to your file to the)</p>
+<p>We suggest that you <strong>visualize</strong> and <strong>inspect</strong> the panicle that you have loaded into R using <a href="https://www.ggplot2-exts.org/ggraph.html">the package <code>ggraph</code></a>.</p>
+<p>Besides checking that the structure resembles what you expect, check that all the edges point outward.</p>
 <p>For example:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">panicle <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggraph/topics/ggraph">ggraph</a></span>() <span class="op">+</span><span class="st"> </span>

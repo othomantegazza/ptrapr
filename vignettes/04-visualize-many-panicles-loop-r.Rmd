@@ -142,7 +142,7 @@ plot_both <- function(panicle_name,
   panicle_topology_plot <- 
     panicle %>% 
     panicle_tibble(.) %>%
-    tileplot_branch() 
+    panicle_tileplot() 
     
   panicle %>%
   {list(panicle_structure_plot %>%
