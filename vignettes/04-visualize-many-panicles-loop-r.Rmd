@@ -67,9 +67,9 @@ panicle_paths <-
 
 # Parse All Panicles
 
-Afterwards, you can loop the main worflow on the named `panicle_paths` object with `map()`. This function, from the package `purrr` is convenient because it loops over r objects preserving the names
+Afterwards, you can loop the main worflow on the named object `panicle_paths` with `map()`. This function from the package `purrr` is convenient because it loops over r objects preserving their names.
 
-Here we show you how to loop the `ptrapr` workflow function by function. 
+Here we show you how build loops over the functions of `ptrapr` one by one.
 
 First parse and load all the files with `read_full_panicle()`.
 
@@ -105,24 +105,24 @@ names(panicle_list)
 
 # Plot All the Panicles
 
-Then define a function to plot panicle, we suggest this one, but we encourage you to tweak it and improve it to your needs:
+In this last part we show you how to combine two kind of plots:
 
-```{r}
-tileplot_branch <- function(pan_tbl) {
-    pan_tbl %>% 
-    ggplot(aes(x = node_rank,
-               y = primary_rank,
-               fill = type)) +
-    geom_tile(colour = "grey80",
-              size = 2) 
-}
-```
+- a `panicle_plot()` that displays the architecture and structure of the panicle,
+- and a `panicle_tileplot()` that focuses on the topology of branching.
 
-And wrap it in another function to plot together different visualisation of that panicle and to use the name of the panicle of as title of the plots.
+You can combine plots in many ways. Hereby we use the package [`cowplot`](https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html). 
+
+Although we provide the plotting funcitions `panicle_plot()` and `panicle_tileplot()`, which are based on `ggplot2` and ggraph, we suggest you that you design your own plotting functions, because only this way you'll achieve the versatility required for exploratory data analysis. You can learn how to design your own plotting functions in the previous vignettes.
+
+## How to wrap iterate over multiple plot functions
+
+So, we want to wrap `panicle_plot()` and `panicle_tileplot()`into another function, to plot together different panicle visualisations, and we want to loop that wrapper over a list of panicle using the name of the panicle file of as title of the plots.
 
 To use the name as title, you will have to loop over the names of `panicle_list` instead of the list itself.
 
-(If you want to master details and quirks of loops and iteration in R, you can [learn about them in here](https://adv-r.hadley.nz/functionals.html))
+(If you want to master details and quirks of loops and iteration in R, you can [learn about them in here](https://adv-r.hadley.nz/functionals.html)).
+
+This might be the most difficult part. We draft a the `plot_both()` function, that returns a plot (grob) list. and we feed that list to cowplot.
 
 ```{r}
 plot_both <- function(panicle_name,
@@ -135,6 +135,7 @@ plot_both <- function(panicle_name,
   panicle_structure_plot <-
     panicle %>%
     plot_panicle() + 
+    # place the title over the first plot
     ggtitle(panicle_name)
   
   # plot the topology
@@ -151,7 +152,7 @@ plot_both <- function(panicle_name,
 }
 ```
 
-This is the final loop, that plots directly in a multipage pdf object.
+This is the final loop, that plots everything directly in a multipage pdf object.
 
 ```{r, eval=FALSE}
 pdf("test-panicle-plots.pdf", width = 8, height = 12)
