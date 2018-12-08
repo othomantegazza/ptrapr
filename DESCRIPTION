@@ -1,7 +1,7 @@
 Package: ptrapr
 Type: Package
 Title: Analyze the Structure of Rice Panicles
-Version: 0.0.1
+Version: 0.0.1.9000
 Authors@R: person("Otho", "Mantegazza", email = "otho.mantegazza@gmail.com",
 				          role = c("aut", "cre"))
 Description: With this package you can analyze the architecture and topology
@@ -10,6 +10,7 @@ Description: With this package you can analyze the architecture and topology
   (https://bioinfo.ird.fr/index.php/resources/49-uncategorised/102-p-trap)
   and provides you with function to plot and analyze a panicle spatial graph.
 License: GPL-3 | file LICENSE
+URL: https://othomantegazza.github.io/ptrapr/, https://github.com/othomantegazza/ptrapr
 Encoding: UTF-8
 LazyData: true
 Depends:
