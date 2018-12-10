@@ -23,7 +23,7 @@ pull_branch <- function(panicle,
 
 #' Make a Tibble with the Vertex ID of the Longest Path
 #'
-#' This function takes a panicle `igraph` as object and
+#' This function takes a branch `igraph` as object and
 #' a starting `vertex` as object, finds the longest path
 #' that starts from that vertex.
 #'
@@ -43,6 +43,10 @@ pull_branch <- function(panicle,
 make_idline <- function(branch,
                         vert_rank)
 {
+  # scaffold
+  print("branch dataframe")
+  branch %>% as_long_data_frame() %>% as_tibble() %>% print()
+
   # since this is a new graph, I have to identify
   # the generating vertex by the attribute rank.
   # Because that attribute is carried in from the
@@ -71,16 +75,23 @@ make_idline <- function(branch,
 
   # I am interested in the types of the nodes in the
   # branch...
+  # and in their original rank
   node_types <-
     branch %>%
     igraph::vertex_attr() %>%
-    .$type
+    {dplyr::tibble(type = .$type, rank = .$rank)}
 
   # scaffold
-  # print("This is are vertex attr")
-  # branch %>%
-  #   igraph::vertex_attr() %>%
-  #   print()
+  print("This is are vertex attr")
+  branch %>%
+    igraph::vertex_attr() %>%
+    print()
+  print("this is the node_types dataframe")
+  print(node_types)
+
+  # scaffold
+  print("main path")
+  print(main_path)
 
   # ...ranked along the nodes in the main axis of the
   # branch
@@ -88,7 +99,16 @@ make_idline <- function(branch,
   out <- node_types_ranked <-
     main_path$vpath %>%
     purrr::flatten_int() %>%
-    node_types[.]
+    node_types[., ]
+
+  # out <- tibble()
+
+  # scaffold
+  print("These are the rows that I plan to take")
+  node_types_ranked <-
+    main_path$vpath %>%
+    purrr::flatten_int() %>%
+    print()
 
   # scaffold
   print("this is the output of make_idline")
@@ -240,13 +260,28 @@ panicle_tibble <- function(panicle,
 
   if(!silently) {print(tb)}
 
+  # scaffold
+  # old version
+  # tb_list <-
+  #   tb %>%
+  #   purrr::pmap(make_idline) %>%
+  #   purrr::map(
+  #     ~tibble::tibble(type = .,
+  #             node_rank = 1:length(.))
+  #   )
+
+  # new version
   tb_list <-
     tb %>%
     purrr::pmap(make_idline) %>%
     purrr::map(
-      ~tibble::tibble(type = .,
-              node_rank = 1:length(.))
-    )
+      ~dplyr::mutate(., node_rank = 1:dplyr::n())
+      )
+
+  # scaffold
+  print("this is the tibble list")
+  print(tb_list)
+
 
   # # scaffold
   # print(tb_list)
