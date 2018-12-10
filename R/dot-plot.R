@@ -21,17 +21,18 @@ pull_branch <- function(panicle,
     igraph::induced_subgraph(sub_verts)
 }
 
-#' Make a Tibble with the Vetex ID of the Longest Path
+#' Make a Tibble with the Vertex ID of the Longest Path
 #'
 #' This function takes a panicle `igraph` as object and
 #' a starting `vertex` as object, finds the longest path
-#' that starts from that branch.
+#' that starts from that vertex.
 #'
 #' The longest path is assumend to be the main branch axis
 #'
-#' The is a returns a `tibble` that
-#' stores the ranks of vertexes along that axis and
-#' their `type` (Secondary, Spikelet, etc.).
+#' This function returns a character vector that
+#' stores `type` of the vertexes (Secondary, Spikelet, etc.)
+#' along that axis ordered from the starting vertex
+#' (supplied in `vert_rank`) going outward.
 #'
 #' @param branch an `igraph` object storing data for a
 #'     panicle branch.
@@ -51,7 +52,7 @@ make_idline <- function(branch,
     igraph::vertex_attr() %>%
     {which(.$rank == vert_rank)}
 
-  # I assume and that the the end of the branch axis
+  # I assume and that the end of the branch axis
   # correspond to the furthest vertex, and use this
   # trick to identify it
   top_node <-
@@ -74,12 +75,27 @@ make_idline <- function(branch,
     branch %>%
     igraph::vertex_attr() %>%
     .$type
+
+  # scaffold
+  # print("This is are vertex attr")
+  # branch %>%
+  #   igraph::vertex_attr() %>%
+  #   print()
+
   # ...ranked along the nodes in the main axis of the
   # branch
-  node_types_ranked <-
+  # this returns a character vector of ordered nodes
+  out <- node_types_ranked <-
     main_path$vpath %>%
     purrr::flatten_int() %>%
     node_types[.]
+
+  # scaffold
+  print("this is the output of make_idline")
+  print(out)
+  print(class(out))
+
+  return(out)
 }
 
 #' Identify Start and End Generating node
@@ -185,9 +201,13 @@ panicle_tibble <- function(panicle,
     nb[keep] %>% as.numeric()
   }
 
+  # All nodes where a primary branch starts
   branch_starts <-
     main_path %>%
     purrr::map(not_primary)
+
+  # scaffold
+  branch_starts %>% print()
 
   # sometimes two branches start from the same node
   # in case, First, print a note
@@ -207,12 +227,16 @@ panicle_tibble <- function(panicle,
     branch_starts %>%
     purrr::flatten_dbl()
 
+  # pull a subgraph from every primary node
   tb <- tibble::tibble(vert_rank = branch_starts,
                        branch = branch_starts %>%
                          purrr::map(
                            ~pull_branch(panicle = panicle,
                                         vert = .))
     )
+
+  # scaffold
+  print(tb)
 
   if(!silently) {print(tb)}
 
@@ -223,6 +247,14 @@ panicle_tibble <- function(panicle,
       ~tibble::tibble(type = .,
               node_rank = 1:length(.))
     )
+
+  # # scaffold
+  # print(tb_list)
+  # # scaffold
+  # tb %>%
+  #   purrr::pmap(make_idline) %>%
+  #   print()
+  # print("This is the idline")
 
   tb_list <-
   1:length(tb_list) %>%
