@@ -79,7 +79,7 @@ make_idline <- function(branch,
   node_types <-
     branch %>%
     igraph::vertex_attr() %>%
-    {dplyr::tibble(type = .$type, rank = .$rank)}
+    {dplyr::tibble(type = .$type, original_rank = .$rank)}
 
   # scaffold
   print("This is are vertex attr")
@@ -96,17 +96,18 @@ make_idline <- function(branch,
   # ...ranked along the nodes in the main axis of the
   # branch
   # this returns a character vector of ordered nodes
-  out <- node_types_ranked <-
+  out <-
     main_path$vpath %>%
     purrr::flatten_int() %>%
-    node_types[., ]
+    node_types[., ] %>%
+    mutate(branchwise_rank = main_path$vpath %>%
+             purrr::flatten_int())
 
   # out <- tibble()
 
   # scaffold
   print("These are the rows that I plan to take")
-  node_types_ranked <-
-    main_path$vpath %>%
+  main_path$vpath %>%
     purrr::flatten_int() %>%
     print()
 
@@ -114,6 +115,56 @@ make_idline <- function(branch,
   print("this is the output of make_idline")
   print(out)
   print(class(out))
+  print(out$original_rank)
+
+  # get the nodes that are downstream
+  # secondary branches and not in the
+  # main path
+  get_down_secondary <- function(vert_id) {
+
+    # the ids of vertexes direcltly downstram
+    down_vert_ids <-
+      igraph::neighbors(graph = branch,
+                        v = vert_id,
+                        mode = "out")
+
+    # the number of vertexes downstream
+    verts_down <- 0
+
+    for(i in down_vert_ids) {
+      if(! i %in% vpath){
+        subcomps <-
+          branch %>%
+          igraph::subcomponent(i,
+                               mode = "out") %>%
+          length()
+
+        verts_down <- verts_down + subcomps
+      }
+    }
+    return(verts_down)
+  }
+
+  out <-
+    out %>%
+    mutate(nodes_downstream = list(igraph::neighbors(
+      graph = branch,
+      v = .data$branchwise_rank,
+      mode = "out")
+    ))
+
+  # scaffold
+  print("this is the vpath")
+  vpath <- main_path$vpath %>%
+    purrr::flatten_int()
+  print(vpath)
+
+  # scaffold
+  print("This is the output of get_down_secondary")
+  out$branchwise_rank %>%
+    purrr::map_dbl(get_down_secondary) %>%
+    print()
+
 
   return(out)
 }
@@ -292,10 +343,11 @@ panicle_tibble <- function(panicle,
   # print("This is the idline")
 
   tb_list <-
-  1:length(tb_list) %>%
-    purrr::map(~dplyr::mutate(tb_list[[.]], primary_rank = .))
+    1:length(tb_list) %>%
+    purrr::map(~dplyr::mutate(tb_list[[.]], primary_rank = .)) %>%
+    purrr::reduce(dplyr::bind_rows)
 
-  tb_list %>% purrr::reduce(dplyr::bind_rows)
+  #### LAST THING for each node, how many downstream?
 }
 
 #' Plot the Output of `panicle_tibble()`
