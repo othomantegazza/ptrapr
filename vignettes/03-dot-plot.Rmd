@@ -105,6 +105,10 @@ pan_tibble %>%
              y = primary_rank,
              fill = type)) +
   geom_tile(colour = "grey80",
-            size = 2) 
+            size = 2) +
+  geom_text(data = . %>% 
+              filter(type == "Seconday"),
+            aes(label = nodes_downstream),
+            colour = "black")
 ```
 

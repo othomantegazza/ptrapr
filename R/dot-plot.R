@@ -166,6 +166,13 @@ make_idline <- function(branch,
     print()
 
 
+  out <-
+    out %>%
+    mutate(nodes_downstream = branchwise_rank %>%
+             purrr::map_dbl(get_down_secondary)
+           )
+
+
   return(out)
 }
 
