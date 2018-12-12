@@ -109,6 +109,6 @@ pan_tibble %>%
   geom_text(data = . %>% 
               filter(type == "Seconday"),
             aes(label = nodes_downstream),
-            colour = "black")
+            colour = "grey70")
 ```
 

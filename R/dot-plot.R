@@ -45,7 +45,9 @@ make_idline <- function(branch,
 {
   # scaffold
   print("branch dataframe")
-  branch %>% as_long_data_frame() %>% as_tibble() %>% print()
+  branch %>%
+    igraph::as_long_data_frame() %>%
+    dplyr::as_tibble() %>% print()
 
   # since this is a new graph, I have to identify
   # the generating vertex by the attribute rank.
@@ -100,7 +102,7 @@ make_idline <- function(branch,
     main_path$vpath %>%
     purrr::flatten_int() %>%
     node_types[., ] %>%
-    mutate(branchwise_rank = main_path$vpath %>%
+    dplyr::mutate(branchwise_rank = main_path$vpath %>%
              purrr::flatten_int())
 
   # out <- tibble()
@@ -147,7 +149,7 @@ make_idline <- function(branch,
 
   out <-
     out %>%
-    mutate(nodes_downstream = list(igraph::neighbors(
+    dplyr::mutate(nodes_downstream = list(igraph::neighbors(
       graph = branch,
       v = .data$branchwise_rank,
       mode = "out")
@@ -168,7 +170,7 @@ make_idline <- function(branch,
 
   out <-
     out %>%
-    mutate(nodes_downstream = branchwise_rank %>%
+    dplyr::mutate(nodes_downstream = branchwise_rank %>%
              purrr::map_dbl(get_down_secondary)
            )
 
@@ -390,7 +392,11 @@ panicle_tileplot <- function(pan_tbl, draw.plot = FALSE)
         fill = "type")) +
     ggplot2::geom_tile(
       colour = "grey80",
-      size = 2)
+      size = 2) +
+    geom_text(data = . %>%
+                dplyr::filter(.data$type == "Seconday"),
+              aes_string(label = "nodes_downstream"),
+              colour = "grey20")
 
   if(draw.plot) print(p)
 
