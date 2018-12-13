@@ -26,6 +26,7 @@ library(magrittr)
 library(igraph)
 library(ggraph)
 library(ptrapr)
+library(forcats)
 
 # ggplot2 theme minimal fits better with graphs
 theme_set(theme_minimal())
@@ -99,16 +100,78 @@ You can use the `panicle_tibble()` function to get a dataframe that stores three
 
 This dataframe is ready to be visualized with `ggplot2`.
 
+We provide the function `panicle_tileplot()` to plot panicle topology. But we strongly suggest that you design your own plotting functions. Only by designing your own plot function your graphical visualization will be versatile enough to let you explore multiple panicle datasets.
+
+Here we provide some examples:
+
+`panicle_tileplot` is just a wrapper around ggplot2, this is how it works.
+
 ```{r}
-pan_tibble %>% 
+p <- 
+  pan_tibble %>% 
   ggplot(aes(x = node_rank,
              y = primary_rank,
              fill = type)) +
   geom_tile(colour = "grey80",
-            size = 2) +
+            size = 2) 
+
+p
+```
+
+You can update the plot and display the number of nodes (Spikelets and tertiary branches) downstream a secondary branch node 
+
+```{r}
+p2 <- p +
   geom_text(data = . %>% 
-              filter(type == "Seconday"),
+              filter(type == "Seconday"), # Show the number for secondary nodes
             aes(label = nodes_downstream),
-            colour = "grey70")
+            colour = "grey40",
+            fontface = "bold")
+
+p2
+```
+
+Above we map the colors to the node type (End, Secondary, Spikelet), but you can also map the colors to the number nodes produced by secondary branches.
+
+```{r}
+p3 <- 
+  pan_tibble %>% 
+  # use as.character %>% as_factor() to turn a continuous variable
+  # into a categorical one.
+  # because node ranks look better if plotted as categorical
+  ggplot(aes(x = node_rank %>% as.character() %>% as_factor(),
+             y = primary_rank %>% as.character() %>% as_factor(),
+             fill = nodes_downstream)) + # map fill to nodes_downstream
+  geom_tile(colour = "grey80",
+            size = 1.5) +
+  geom_text(data = . %>% 
+              filter(type == "Seconday"), # Show the number for secondary nodes
+            aes(label = nodes_downstream),
+            colour = "grey30",
+            fontface = "bold",
+            size = 5) +
+  # fixed xy ratio, each tile is a square
+  coord_fixed() +
+  # make the plot nicer
+  scale_fill_viridis(breaks = function(limits) 0:max(limits),
+                     guide = guide_legend(nrow = 1, 
+                                          keyheight = unit(7, units = "mm"),
+                                          keywidth=unit(7, units = "mm"),
+                                          override.aes = list(size = 0))) +
+   # fill guide on top
+  theme(legend.position = "top") +
+  # Clear axis names
+  labs(x = "Nodes rank along primary branches",
+       y = "Nodes rank along the rachis",
+       fill = "Nodes in the secondary branch")
+p3
+```
+
+```{r, eval=FALSE, echo = FALSE}
+pdf(file = "test_panicle_colors.pdf",
+    width = 5.2, height = 6,
+    paper = "a4")
+p3 
+dev.off()
 ```
 

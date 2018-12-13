@@ -33,5 +33,6 @@ Suggests:
     knitr,
     rmarkdown,
     cowplot,
-    stringr
+    stringr,
+    forcats
 VignetteBuilder: knitr
