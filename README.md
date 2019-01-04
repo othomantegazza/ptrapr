@@ -26,7 +26,7 @@ sudo apt-get install libgeos++-dev
 
 # Use - documentation
 
-Access here **online** the [full documentation](https://othomantegazza.github.io/ptrapr/) and the [package vignette](https://othomantegazza.github.io/fluidgr/articles/)
+Access here **online** the [full documentation](https://othomantegazza.github.io/ptrapr/) and the [package vignette](https://othomantegazza.github.io/ptrapr/articles/)
 
 # Warranty
 
