@@ -25,8 +25,9 @@ library(dplyr)
 library(magrittr)
 library(igraph)
 library(ggraph)
-library(ptrapr)
+# library(ptrapr)
 library(forcats)
+library(stringr)
 
 # ggplot2 theme minimal fits better with graphs
 theme_set(theme_minimal())
@@ -36,7 +37,7 @@ theme_set(theme_minimal())
 
 In this Vignette you will learn how to visualize the panicle stucture, with some simple plots that highlight important features.
 
-We provide the R object `panicle` which stores a panicle graph that has been already parsed in R. If you want to learn how to parse panicle XML files, please read the Vignette "Load Panicles into R".
+We provide the R objects `good_panicle` and `inverted_panicle` which store a panicle graph that has been already parsed in R. If you want to learn how to parse panicle XML files, please read the Vignette "Load Panicles into R".
 
 Access sample panicle data with:
 
@@ -45,34 +46,41 @@ data(good_panicle)
 data(inverted_panicle)
 ```
 
-# Check the direction of the edges (Branches)
+Before you use the panicle graph in `inverted_panicle`, you must invert it with `invert_edges()`.
 
-Sometimes, the direction of the edges in the graphs produced with ptrap are not correct.
+# Plot the Panicle Graph
 
-Every edge corrispond to the part of a branch that connect one node to another. By convention each edge should be directed outward: pointing from the node closer to the base of the panicle to the one further away.
+The most basic way to inspect a panicle graph by plotting it with the functions provided by `ggraph`.
 
-You can understand this better by looking at the panicle graphs: we provide two panicle graph objects:
+We provide a wrapper in the function `plot_panicle()`, this is what that function does and how you can adjust the resulting plot.
 
-- One named `good_panicle` in which every edge points outward.
-- One named `inverted_panicle` in which the edges on the main rachis axis point inward.
-
-We can see this comparing the graphs. 
-
-The `good_panicle` graph has no inverted edges: 
+The function `plot_panicle()` plots a panicle graph with the functions `ggraph()`, `geom_edge_link()` and `geom_node_point()` in this way.
 
 ```{r}
-good_panicle %>% plot_panicle()
+# set a basic point size to represent the nodes,
+# so that the graph elements (nodes and edges)
+# do not overlap with each others.
+point_size <- 1.8
+
+good_panicle %>% 
+  ggraph(layout = "nicely") + # nicely is just a default layout
+  geom_edge_link(
+    arrow = grid::arrow(    # represent edges as arrows
+      length = grid::unit(0.06, "inches"),
+      type = "closed"),
+    colour = "grey30", # set a nice colour for the edges
+    end_cap = ggraph::circle(point_size/2, "mm"),  # thanks to the parameters end_cap and
+    start_cap = ggraph::circle(point_size/2, "mm") # start_cap, the edge arrows do not 
+                                                   # overlap with the nodes
+  ) +
+  geom_node_point( # represent the nodes as points
+      ggplot2::aes_string(colour = "type"), # colours as node hierarchy (primary etc.)
+      size = point_size,
+      alpha =.9)  +
+  coord_fixed() # fix x and y ratio, since the coordinates are real measurements
+  
 ```
 
-Compare the previous graph with the one below, repersenting the `inverted_panicle` object. In the graph below, the edges on the main axis are inverted.
-
-```{r}
-inverted_panicle %>% plot_panicle()
-```
-
-We suggest you to inspect your data, and if some of the edges are inverted, you can learn how to correct them in the vignette "Why and How to Invert Edges".
-
-Let's continue on the `good_panicle` graph.
 
 # Inspect Branching with a Dot Plot
 
@@ -80,7 +88,7 @@ In order to visualize and inspect primary and secondary branching, we suggest yo
 
 To achieve this, first you will have to extract features from the panicle graph and put them in a data frame
 
-## Extract a data frame from the graph with `panicle_tibble()`
+## Extract a data frame from the graph with panicle_tibble()
 
 To extract data from a panicle graph and store it in a convenient dataframe, we provide the `panicle_tibble()` function. You can use it this way:
 
@@ -141,7 +149,7 @@ p3 <-
   # because node ranks look better if plotted as categorical
   ggplot(aes(x = node_rank %>% as.character() %>% as_factor(),
              y = primary_rank %>% as.character() %>% as_factor(),
-             fill = nodes_downstream)) + # map fill to nodes_downstream
+             fill = nodes_downstream)) + # nodes on 2ndary branches to fill colours
   geom_tile(colour = "grey80",
             size = 1.5) +
   geom_text(data = . %>% 
@@ -152,8 +160,11 @@ p3 <-
             size = 5) +
   # fixed xy ratio, each tile is a square
   coord_fixed() +
-  # make the plot nicer
-  scale_fill_viridis(breaks = function(limits) 0:max(limits),
+  # set scale of colours and
+  # proper labels for the colour scales
+  scale_fill_viridis(breaks = function(limits) c(0, 2:max(limits)), 
+                     labels = function(breaks) case_when(breaks == 0 ~ "None\n[Spikelet]",
+                                                         TRUE ~ as.character(breaks)),
                      guide = guide_legend(nrow = 1, 
                                           keyheight = unit(7, units = "mm"),
                                           keywidth=unit(7, units = "mm"),
@@ -163,7 +174,7 @@ p3 <-
   # Clear axis names
   labs(x = "Nodes rank along primary branches",
        y = "Nodes rank along the rachis",
-       fill = "Nodes in the secondary branch")
+       fill = str_wrap("Nodes in secondary branches", width = 20))
 p3
 ```
 
