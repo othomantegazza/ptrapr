@@ -43,12 +43,6 @@ pull_branch <- function(panicle,
 make_idline <- function(branch,
                         vert_rank)
 {
-  # scaffold
-  print("branch dataframe")
-  branch %>%
-    igraph::as_long_data_frame() %>%
-    dplyr::as_tibble() %>% print()
-
   # since this is a new graph, I have to identify
   # the generating vertex by the attribute rank.
   # Because that attribute is carried in from the
@@ -83,18 +77,6 @@ make_idline <- function(branch,
     igraph::vertex_attr() %>%
     {dplyr::tibble(type = .$type, original_rank = .$rank)}
 
-  # scaffold
-  print("This is are vertex attr")
-  branch %>%
-    igraph::vertex_attr() %>%
-    print()
-  print("this is the node_types dataframe")
-  print(node_types)
-
-  # scaffold
-  print("main path")
-  print(main_path)
-
   # ...ranked along the nodes in the main axis of the
   # branch
   # this returns a character vector of ordered nodes
@@ -105,26 +87,12 @@ make_idline <- function(branch,
     dplyr::mutate(branchwise_rank = main_path$vpath %>%
              purrr::flatten_int())
 
-  # out <- tibble()
-
-  # scaffold
-  print("These are the rows that I plan to take")
-  main_path$vpath %>%
-    purrr::flatten_int() %>%
-    print()
-
-  # scaffold
-  print("this is the output of make_idline")
-  print(out)
-  print(class(out))
-  print(out$original_rank)
-
   # get the nodes that are downstream
   # secondary branches and not in the
   # main path
   get_down_secondary <- function(vert_id) {
 
-    # the ids of vertexes direcltly downstram
+    # the ids of vertexes direcltly downstream
     down_vert_ids <-
       igraph::neighbors(graph = branch,
                         v = vert_id,
@@ -149,31 +117,22 @@ make_idline <- function(branch,
 
   out <-
     out %>%
-    dplyr::mutate(nodes_downstream = list(igraph::neighbors(
-      graph = branch,
-      v = .data$branchwise_rank,
-      mode = "out")
+    dplyr::mutate(nodes_downstream = list(
+      igraph::neighbors(
+        graph = branch,
+        v = .data$branchwise_rank,
+        mode = "out")
     ))
 
-  # scaffold
-  print("this is the vpath")
+  # scaffold?
   vpath <- main_path$vpath %>%
     purrr::flatten_int()
-  print(vpath)
 
-  # scaffold
-  print("This is the output of get_down_secondary")
-  out$branchwise_rank %>%
-    purrr::map_dbl(get_down_secondary) %>%
-    print()
-
-
+  # Save nodes downstream in the output of out
   out <-
     out %>%
     dplyr::mutate(nodes_downstream = branchwise_rank %>%
-             purrr::map_dbl(get_down_secondary)
-           )
-
+                    purrr::map_dbl(get_down_secondary))
 
   return(out)
 }
@@ -286,9 +245,6 @@ panicle_tibble <- function(panicle,
     main_path %>%
     purrr::map(not_primary)
 
-  # scaffold
-  branch_starts %>% print()
-
   # sometimes two branches start from the same node
   # in case, First, print a note
   if(!silently) {
@@ -315,20 +271,7 @@ panicle_tibble <- function(panicle,
                                         vert = .))
     )
 
-  # scaffold
-  print(tb)
-
   if(!silently) {print(tb)}
-
-  # scaffold
-  # old version
-  # tb_list <-
-  #   tb %>%
-  #   purrr::pmap(make_idline) %>%
-  #   purrr::map(
-  #     ~tibble::tibble(type = .,
-  #             node_rank = 1:length(.))
-  #   )
 
   # new version
   tb_list <-
@@ -338,25 +281,10 @@ panicle_tibble <- function(panicle,
       ~dplyr::mutate(., node_rank = 1:dplyr::n())
       )
 
-  # scaffold
-  print("this is the tibble list")
-  print(tb_list)
-
-
-  # # scaffold
-  # print(tb_list)
-  # # scaffold
-  # tb %>%
-  #   purrr::pmap(make_idline) %>%
-  #   print()
-  # print("This is the idline")
-
   tb_list <-
     1:length(tb_list) %>%
     purrr::map(~dplyr::mutate(tb_list[[.]], primary_rank = .)) %>%
     purrr::reduce(dplyr::bind_rows)
-
-  #### LAST THING for each node, how many downstream?
 }
 
 #' Plot the Output of `panicle_tibble()`
