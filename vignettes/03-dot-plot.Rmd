@@ -25,17 +25,17 @@ library(dplyr)
 library(magrittr)
 library(igraph)
 library(ggraph)
-# library(ptrapr)
+library(ptrapr)
 library(forcats)
 library(stringr)
 
-# ggplot2 theme minimal fits better with graphs
+# panicle graphs look better with ggplot2's theme minimal
 theme_set(theme_minimal())
 ```
 
 # Intro / get data
 
-In this Vignette you will learn how to visualize the panicle stucture, with some simple plots that highlight important features.
+In this Vignette you will learn how to visualize the panicle stucture, with some simple plots that highlight important features such as the number of spikelets, the number of branches and their topology.
 
 We provide the R objects `good_panicle` and `inverted_panicle` which store a panicle graph that has been already parsed in R. If you want to learn how to parse panicle XML files, please read the Vignette "Load Panicles into R".
 
@@ -52,9 +52,7 @@ Before you use the panicle graph in `inverted_panicle`, you must invert it with 
 
 The most basic way to inspect a panicle graph by plotting it with the functions provided by `ggraph`.
 
-We provide a wrapper in the function `plot_panicle()`, this is what that function does and how you can adjust the resulting plot.
-
-The function `plot_panicle()` plots a panicle graph with the functions `ggraph()`, `geom_edge_link()` and `geom_node_point()` in this way.
+We provide a wrapper in the function `plot_panicle()`, this is what that function does and how you can adjust the resulting plot. The function `plot_panicle()` plots a panicle graph with the functions `ggraph()`, `geom_edge_link()` and `geom_node_point()`; see those elements in action below.
 
 ```{r}
 # set a basic point size to represent the nodes,
@@ -84,7 +82,7 @@ good_panicle %>%
 
 # Inspect Branching with a Dot Plot
 
-In order to visualize and inspect primary and secondary branching, we suggest you to represent your data with a tiled plot. We have learned about this representation in [this paper by Fujishiro et al.](https://www.nature.com/articles/s41598-018-30395-9). We suggest this plot because it highlights the number and position of primary and secondary branches in a direct and intuitive way.
+In order to visualize and inspect primary and secondary branching, we suggest you to represent your data with a tile plot. We have learned about this representation in [this paper by Fujishiro et al.](https://www.nature.com/articles/s41598-018-30395-9). We suggest this plot because it highlights the number and position of primary and secondary branches in a direct and intuitive way.
 
 To achieve this, first you will have to extract features from the panicle graph and put them in a data frame
 
@@ -98,11 +96,12 @@ pan_tibble <-
   panicle_tibble()
 ```
 
-You can use the `panicle_tibble()` function to get a dataframe that stores three variables:
+You can use the `panicle_tibble()` function to get panicle features stored in a dataframe. This dataframe stores each node of the original panicle in the rows and it has four columns, corresponding to 4 different features:
 
-- **`primary`**: the rank of the primary branch (the lower ranking branch are closer to base of the panicle).
 - **`type`**: Along that primary branch, the identity of each node. (Secondary, Spikelet or End).
-- **`rank`**: Along that primary branch, the rank of each node.
+- **`nodes_downstream`**: how many nodes are downstream that node.
+- **`secondary_rank`**: the rank of that node along the primary branch on which that nodes sits. Starting fro, the base of that branch.
+- **`primary_rank`**: the rank of the primary branch on which that node sits (primary branches are ranked along the rachis starting from the base of the panicle).
 
 # Visulize with a tileplot
 
@@ -117,7 +116,7 @@ Here we provide some examples:
 ```{r}
 p <- 
   pan_tibble %>% 
-  ggplot(aes(x = node_rank,
+  ggplot(aes(x = secondary_rank,
              y = primary_rank,
              fill = type)) +
   geom_tile(colour = "grey80",
@@ -147,7 +146,7 @@ p3 <-
   # use as.character %>% as_factor() to turn a continuous variable
   # into a categorical one.
   # because node ranks look better if plotted as categorical
-  ggplot(aes(x = node_rank %>% as.character() %>% as_factor(),
+  ggplot(aes(x = secondary_rank %>% as.character() %>% as_factor(),
              y = primary_rank %>% as.character() %>% as_factor(),
              fill = nodes_downstream)) + # nodes on 2ndary branches to fill colours
   geom_tile(colour = "grey80",
@@ -163,7 +162,7 @@ p3 <-
   # set scale of colours and
   # proper labels for the colour scales
   scale_fill_viridis(breaks = function(limits) c(0, 2:max(limits)), 
-                     labels = function(breaks) case_when(breaks == 0 ~ "None\n[Spikelet]",
+                     labels = function(breaks) case_when(breaks == 0 ~ "1\n[Spikelet]",
                                                          TRUE ~ as.character(breaks)),
                      guide = guide_legend(nrow = 1, 
                                           keyheight = unit(7, units = "mm"),
@@ -173,8 +172,8 @@ p3 <-
   theme(legend.position = "top") +
   # Clear axis names
   labs(x = "Nodes rank along primary branches",
-       y = "Nodes rank along the rachis",
-       fill = str_wrap("Nodes in secondary branches", width = 20))
+       y = "Rank along the rachis",
+       fill = str_wrap("Nodes on secondary branch", width = 20))
 p3
 ```
 
