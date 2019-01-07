@@ -28,11 +28,11 @@ library(igraph)
 # library(tibble)
 library(dplyr)
 # library(tidygraph)
+library(stringr)
 
 # ggplot2 theme minimal fits better with graphs
 theme_set(theme_minimal())
 ```
-
 
 
 # Read Panicle XML files
@@ -50,9 +50,75 @@ A grain file:
 
 We have included examples of those files in this package. You can access these examples [**online here**](https://github.com/othomantegazza/ptrapr) or locally in the folder `ptrapr/extdata` [^find.package].
 
-[^find.package]: Locate your local package folder with the function:: `find.package("ptrapr")`
- 
-## Read Panicle Structure with `read_panicle()`
+[^find.package]: Locate your local package folder with the function:: `find.package("ptrapr")`.
+
+## Easily read and plot the full panicle
+
+We provide a convinent function that loads a full panicle in R: `read_full_panicle()`. This funcrtion reads a file tha stores the panicle architecture (that has extension `.ricepr`) and its counterpart that stores the grain coordinates (that has extension `.ricegr`) and merges them together.
+
+This function requires the path to both files as argument. 
+
+We provide examples of `.ricepr` and `.ricegr` files bundled in this package, with the following lines of code you can access those files and load them into R:
+
+```{r}
+# find a .ricepr file
+structure_path <- system.file("extdata/1_1_6307.ricepr", 
+                   package = "ptrapr") 
+
+# and its .ricegr counterpart
+grain_path <- system.file("extdata/1_1_6307.ricegr",
+                          package = "ptrapr")
+
+# load them into R and mergge them
+full_panicle <- read_full_panicle(pr_file = structure_path,
+                                  gr_file = grain_path)
+```
+
+The function `read_full_panicle()` outputs an graph object of class [`igraph`](https://igraph.org/r/).
+
+This graph can be visualized directly with `plot_panicle()`
+
+```{r}
+plot_panicle(full_panicle)
+```
+
+### If the `.ricepr` and `.ricegr` files have the same name
+
+If those two files are in the same folder and they have the same name, like in this case you can provide the path to those files omitting the extension to the function `read_full_panicle()` in the parameter `base_path`.
+
+For example, in my case, the path to the .ricepr file is:
+
+```{r}
+structure_path
+```
+
+And the one to the .ricegr file is the same, only the extension changes:
+
+```{r}
+grain_path
+```
+
+So, I can remove the extension from one of those files:
+
+```{r}
+base_path <- 
+  structure_path %>% 
+  str_remove(".ricepr")
+
+base_path
+```
+
+And use that shortened version to load the full panicle into R with `read_full_panicle()`
+
+```{r}
+full_panicle <- read_full_panicle(base_path = base_path)
+```
+
+The result is exactly the same as above, and this approach might come in handy when you have to loop over the structure of many panicles.
+
+## Read Panicle Structure with read_panicle()
+
+From here on, we show all the steps that `read_full_panicle()` does automatically: how to parse the two files separately, and how they are merged.
 
 The structure and topology of the panicle is stored in the `.ricepr` XML files.
 
@@ -82,7 +148,7 @@ For example:
 
 ```{r}
 panicle %>% 
-  ggraph() + 
+  ggraph(layout = "nicely") + 
   geom_edge_link(arrow = grid::arrow(length = unit(0.08,
                                                    "inches"),
                                      type = "closed"),
@@ -93,7 +159,7 @@ panicle %>%
   coord_fixed()
 ```
 
-## Read Grain Coordinates with `read_grains()`
+## Read Grain Coordinates with read_grains()
 
 Likewise, we provide a sample `.ricegr` file. This file stores coordinates for all the grains on the panicle, but no structual / topological information.
 
@@ -116,7 +182,7 @@ ggplot(grains,
   coord_fixed()
 ```
 
-## Merge Grains into the Panicle Graph with `add_all_grains()`
+## Merge Grains into the Panicle Graph with add_all_grains()
 
 Including grains into the panicle graph is a non trivial task with no perfect solution. We had best results by assigning the grain to the closest bracnh and by splitting the brach on the grain itself, creating a new intermediate node.
 
@@ -132,7 +198,7 @@ For example, this is how the panicle graphs and the grains look **before** addin
 
 ```{r}
 panicle %>% 
-  ggraph() + 
+  ggraph(layout = "nicely") + 
   geom_edge_link(arrow = grid::arrow(length = unit(0.08,
                                                    "inches"),
                                      type = "closed"),
@@ -149,7 +215,7 @@ And this is how it looks **after adding the grains**.
 
 ```{r}
 full_panicle %>%
-  ggraph() + 
+  ggraph(layout = "nicely") + 
   geom_edge_link(arrow = grid::arrow(length = unit(0.08,
                                                    "inches"),
                                      type = "closed"),

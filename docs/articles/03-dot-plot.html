@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ptrapr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1</span>
       </span>
     </div>
 
@@ -69,7 +69,14 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/othomantegazza/ptrapr">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -84,9 +91,9 @@
       <h1>03 - Visualize The Topology of a Panicle</h1>
                         <h4 class="author">Otho Mantegazza</h4>
             
-            <h4 class="date">2018-12-07</h4>
+            <h4 class="date">2019-01-08</h4>
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/othomantegazza/ptrapr/blob/master/vignettes/03-dot-plot.Rmd"><code>vignettes/03-dot-plot.Rmd</code></a></small>
       <div class="hidden name"><code>03-dot-plot.Rmd</code></div>
 
     </div>
@@ -101,60 +108,72 @@
 <span class="kw">library</span>(igraph)
 <span class="kw">library</span>(ggraph)
 <span class="kw">library</span>(ptrapr)
+<span class="kw">library</span>(forcats)
+<span class="kw">library</span>(stringr)
 
-<span class="co"># ggplot2 theme minimal fits better with graphs</span>
+<span class="co"># panicle graphs look better with ggplot2's theme minimal</span>
 <span class="kw">theme_set</span>(<span class="kw">theme_minimal</span>())</code></pre></div>
 </div>
 <div id="intro-get-data" class="section level1">
 <h1 class="hasAnchor">
 <a href="#intro-get-data" class="anchor"></a>Intro / get data</h1>
-<p>In this Vignette you will learn how to visualize the panicle stucture, with some simple plots that highlight important features.</p>
-<p>We provide the R object <code>panicle</code> which stores a panicle graph that has been already parsed in R. If you want to learn how to parse panicle XML files, please read the Vignette “Load Panicles into R”.</p>
+<p>In this Vignette you will learn how to visualize the panicle stucture, with some simple plots that highlight important features such as the number of spikelets, the number of branches and their topology.</p>
+<p>We provide the R objects <code>good_panicle</code> and <code>inverted_panicle</code> which store a panicle graph that has been already parsed in R. If you want to learn how to parse panicle XML files, please read the Vignette “Load Panicles into R”.</p>
 <p>Access sample panicle data with:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(good_panicle)
 <span class="kw">data</span>(inverted_panicle)</code></pre></div>
+<p>Before you use the panicle graph in <code>inverted_panicle</code>, you must invert it with <code><a href="../reference/invert_edges.html">invert_edges()</a></code>.</p>
 </div>
-<div id="check-the-direction-of-the-edges-branches" class="section level1">
+<div id="plot-the-panicle-graph" class="section level1">
 <h1 class="hasAnchor">
-<a href="#check-the-direction-of-the-edges-branches" class="anchor"></a>Check the direction of the edges (Branches)</h1>
-<p>Sometimes, the direction of the edges in the graphs produced with ptrap are not correct.</p>
-<p>Every edge corrispond to the part of a branch that connect one node to another. By convention each edge should be directed outward: pointing from the node closer to the base of the panicle to the one further away.</p>
-<p>You can understand this better by looking at the panicle graphs: we provide two panicle graph objects:</p>
-<ul>
-<li>One named <code>good_panicle</code> in which every edge points outward.</li>
-<li>One named <code>inverted_panicle</code> in which the edges on the main rachis axis point inward.</li>
-</ul>
-<p>We can see this comparing the graphs.</p>
-<p>The <code>good_panicle</code> graph has no inverted edges:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">good_panicle <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/plot_panicle.html">plot_panicle</a></span>()</code></pre></div>
+<a href="#plot-the-panicle-graph" class="anchor"></a>Plot the Panicle Graph</h1>
+<p>The most basic way to inspect a panicle graph by plotting it with the functions provided by <code>ggraph</code>.</p>
+<p>We provide a wrapper in the function <code><a href="../reference/plot_panicle.html">plot_panicle()</a></code>, this is what that function does and how you can adjust the resulting plot. The function <code><a href="../reference/plot_panicle.html">plot_panicle()</a></code> plots a panicle graph with the functions <code><a href="http://www.rdocumentation.org/packages/ggraph/topics/ggraph">ggraph()</a></code>, <code><a href="http://www.rdocumentation.org/packages/ggraph/topics/geom_edge_link">geom_edge_link()</a></code> and <code><a href="http://www.rdocumentation.org/packages/ggraph/topics/geom_node_point">geom_node_point()</a></code>; see those elements in action below.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># set a basic point size to represent the nodes,</span>
+<span class="co"># so that the graph elements (nodes and edges)</span>
+<span class="co"># do not overlap with each others.</span>
+point_size &lt;-<span class="st"> </span><span class="fl">1.8</span>
+
+good_panicle <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggraph/topics/ggraph">ggraph</a></span>(<span class="dt">layout =</span> <span class="st">"nicely"</span>) <span class="op">+</span><span class="st"> </span><span class="co"># nicely is just a default layout</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggraph/topics/geom_edge_link">geom_edge_link</a></span>(
+    <span class="dt">arrow =</span> grid<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/grid/topics/arrow">arrow</a></span>(    <span class="co"># represent edges as arrows</span>
+      <span class="dt">length =</span> grid<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/grid/topics/unit">unit</a></span>(<span class="fl">0.06</span>, <span class="st">"inches"</span>),
+      <span class="dt">type =</span> <span class="st">"closed"</span>),
+    <span class="dt">colour =</span> <span class="st">"grey30"</span>, <span class="co"># set a nice colour for the edges</span>
+    <span class="dt">end_cap =</span> ggraph<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggraph/topics/geometry">circle</a></span>(point_size<span class="op">/</span><span class="dv">2</span>, <span class="st">"mm"</span>),  <span class="co"># thanks to the parameters end_cap and</span>
+    <span class="dt">start_cap =</span> ggraph<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggraph/topics/geometry">circle</a></span>(point_size<span class="op">/</span><span class="dv">2</span>, <span class="st">"mm"</span>) <span class="co"># start_cap, the edge arrows do not </span>
+                                                   <span class="co"># overlap with the nodes</span>
+  ) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggraph/topics/geom_node_point">geom_node_point</a></span>( <span class="co"># represent the nodes as points</span>
+      ggplot2<span class="op">::</span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes_.html">aes_string</a></span>(<span class="dt">colour =</span> <span class="st">"type"</span>), <span class="co"># colours as node hierarchy (primary etc.)</span>
+      <span class="dt">size =</span> point_size,
+      <span class="dt">alpha =</span>.<span class="dv">9</span>)  <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_fixed</span>() <span class="co"># fix x and y ratio, since the coordinates are real measurements</span></code></pre></div>
 <p><img src="03-dot-plot_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
-<p>Compare the previous graph with the one below, repersenting the <code>inverted_panicle</code> object. In the graph below, the edges on the main axis are inverted.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">inverted_panicle <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/plot_panicle.html">plot_panicle</a></span>()</code></pre></div>
-<p><img src="03-dot-plot_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
-<p>We suggest you to inspect your data, and if some of the edges are inverted, you can learn how to correct them in the vignette “Why and How to Invert Edges”.</p>
-<p>Let’s continue on the <code>good_panicle</code> graph.</p>
 </div>
 <div id="inspect-branching-with-a-dot-plot" class="section level1">
 <h1 class="hasAnchor">
 <a href="#inspect-branching-with-a-dot-plot" class="anchor"></a>Inspect Branching with a Dot Plot</h1>
-<p>In order to visualize and inspect primary and secondary branching, we suggest you to represent your data with a tiled plot. We have learned about this representation in <a href="https://www.nature.com/articles/s41598-018-30395-9">this paper by Fujishiro et al.</a>. We suggest this plot because it highlights the number and position of primary and secondary branches in a direct and intuitive way.</p>
+<p>In order to visualize and inspect primary and secondary branching, we suggest you to represent your data with a tile plot. We have learned about this representation in <a href="https://www.nature.com/articles/s41598-018-30395-9">this paper by Fujishiro et al.</a>. We suggest this plot because it highlights the number and position of primary and secondary branches in a direct and intuitive way.</p>
 <p>To achieve this, first you will have to extract features from the panicle graph and put them in a data frame</p>
 <div id="extract-a-data-frame-from-the-graph-with-panicle_tibble" class="section level2">
 <h2 class="hasAnchor">
-<a href="#extract-a-data-frame-from-the-graph-with-panicle_tibble" class="anchor"></a>Extract a data frame from the graph with <code><a href="../reference/panicle_tibble.html">panicle_tibble()</a></code>
-</h2>
+<a href="#extract-a-data-frame-from-the-graph-with-panicle_tibble" class="anchor"></a>Extract a data frame from the graph with panicle_tibble()</h2>
 <p>To extract data from a panicle graph and store it in a convenient dataframe, we provide the <code><a href="../reference/panicle_tibble.html">panicle_tibble()</a></code> function. You can use it this way:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pan_tibble &lt;-<span class="st"> </span>
 <span class="st">  </span>good_panicle <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="../reference/panicle_tibble.html">panicle_tibble</a></span>()</code></pre></div>
-<p>You can use the <code><a href="../reference/panicle_tibble.html">panicle_tibble()</a></code> function to get a dataframe that stores three variables:</p>
+<p>You can use the <code><a href="../reference/panicle_tibble.html">panicle_tibble()</a></code> function to get panicle features stored in a dataframe. This dataframe stores each node of the original panicle in the rows and it has four columns, corresponding to 4 different features:</p>
 <ul>
-<li>
-<strong><code>primary</code></strong>: the rank of the primary branch (the lower ranking branch are closer to base of the panicle).</li>
 <li>
 <strong><code>type</code></strong>: Along that primary branch, the identity of each node. (Secondary, Spikelet or End).</li>
 <li>
-<strong><code>rank</code></strong>: Along that primary branch, the rank of each node.</li>
+<strong><code>nodes_downstream</code></strong>: how many nodes are downstream that node.</li>
+<li>
+<strong><code>secondary_rank</code></strong>: the rank of that node along the primary branch on which that nodes sits. Starting fro, the base of that branch.</li>
+<li>
+<strong><code>primary_rank</code></strong>: the rank of the primary branch on which that node sits (primary branches are ranked along the rachis starting from the base of the panicle).</li>
 </ul>
 </div>
 </div>
@@ -162,13 +181,65 @@
 <h1 class="hasAnchor">
 <a href="#visulize-with-a-tileplot" class="anchor"></a>Visulize with a tileplot</h1>
 <p>This dataframe is ready to be visualized with <code>ggplot2</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pan_tibble <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> node_rank,
+<p>We provide the function <code><a href="../reference/panicle_tileplot.html">panicle_tileplot()</a></code> to plot panicle topology. But we strongly suggest that you design your own plotting functions. Only by designing your own plot function your graphical visualization will be versatile enough to let you explore multiple panicle datasets.</p>
+<p>Here we provide some examples:</p>
+<p><code>panicle_tileplot</code> is just a wrapper around ggplot2, this is how it works.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span>
+<span class="st">  </span>pan_tibble <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> secondary_rank,
              <span class="dt">y =</span> primary_rank,
              <span class="dt">fill =</span> type)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_tile</span>(<span class="dt">colour =</span> <span class="st">"grey80"</span>,
-            <span class="dt">size =</span> <span class="dv">2</span>) </code></pre></div>
+            <span class="dt">size =</span> <span class="dv">2</span>) 
+
+p</code></pre></div>
+<p><img src="03-dot-plot_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<p>You can update the plot and display the number of nodes (Spikelets and tertiary branches) downstream a secondary branch node</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p2 &lt;-<span class="st"> </span>p <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">data =</span> . <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">              </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(type <span class="op">==</span><span class="st"> "Seconday"</span>), <span class="co"># Show the number for secondary nodes</span>
+            <span class="kw">aes</span>(<span class="dt">label =</span> nodes_downstream),
+            <span class="dt">colour =</span> <span class="st">"grey40"</span>,
+            <span class="dt">fontface =</span> <span class="st">"bold"</span>)
+
+p2</code></pre></div>
 <p><img src="03-dot-plot_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<p>Above we map the colors to the node type (End, Secondary, Spikelet), but you can also map the colors to the number nodes produced by secondary branches.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p3 &lt;-<span class="st"> </span>
+<span class="st">  </span>pan_tibble <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># use as.character %&gt;% as_factor() to turn a continuous variable</span>
+<span class="st">  </span><span class="co"># into a categorical one.</span>
+<span class="st">  </span><span class="co"># because node ranks look better if plotted as categorical</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> secondary_rank <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.character</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://forcats.tidyverse.org/reference/as_factor.html">as_factor</a></span>(),
+             <span class="dt">y =</span> primary_rank <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.character</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://forcats.tidyverse.org/reference/as_factor.html">as_factor</a></span>(),
+             <span class="dt">fill =</span> nodes_downstream)) <span class="op">+</span><span class="st"> </span><span class="co"># nodes on 2ndary branches to fill colours</span>
+<span class="st">  </span><span class="kw">geom_tile</span>(<span class="dt">colour =</span> <span class="st">"grey80"</span>,
+            <span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">data =</span> . <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">              </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(type <span class="op">==</span><span class="st"> "Seconday"</span>), <span class="co"># Show the number for secondary nodes</span>
+            <span class="kw">aes</span>(<span class="dt">label =</span> nodes_downstream),
+            <span class="dt">colour =</span> <span class="st">"grey30"</span>,
+            <span class="dt">fontface =</span> <span class="st">"bold"</span>,
+            <span class="dt">size =</span> <span class="dv">5</span>) <span class="op">+</span>
+<span class="st">  </span><span class="co"># fixed xy ratio, each tile is a square</span>
+<span class="st">  </span><span class="kw">coord_fixed</span>() <span class="op">+</span>
+<span class="st">  </span><span class="co"># set scale of colours and</span>
+<span class="st">  </span><span class="co"># proper labels for the colour scales</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggraph/topics/reexports">scale_fill_viridis</a></span>(<span class="dt">breaks =</span> <span class="cf">function</span>(limits) <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">2</span><span class="op">:</span><span class="kw">max</span>(limits)), 
+                     <span class="dt">labels =</span> <span class="cf">function</span>(breaks) <span class="kw"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(breaks <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">~</span><span class="st"> "1</span><span class="ch">\n</span><span class="st">[Spikelet]"</span>,
+                                                         <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span><span class="kw">as.character</span>(breaks)),
+                     <span class="dt">guide =</span> <span class="kw">guide_legend</span>(<span class="dt">nrow =</span> <span class="dv">1</span>, 
+                                          <span class="dt">keyheight =</span> <span class="kw">unit</span>(<span class="dv">7</span>, <span class="dt">units =</span> <span class="st">"mm"</span>),
+                                          <span class="dt">keywidth=</span><span class="kw">unit</span>(<span class="dv">7</span>, <span class="dt">units =</span> <span class="st">"mm"</span>),
+                                          <span class="dt">override.aes =</span> <span class="kw">list</span>(<span class="dt">size =</span> <span class="dv">0</span>))) <span class="op">+</span>
+<span class="st">   </span><span class="co"># fill guide on top</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">"top"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="co"># Clear axis names</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"Nodes rank along primary branches"</span>,
+       <span class="dt">y =</span> <span class="st">"Rank along the rachis"</span>,
+       <span class="dt">fill =</span> <span class="kw"><a href="https://stringr.tidyverse.org/reference/str_wrap.html">str_wrap</a></span>(<span class="st">"Nodes on secondary branch"</span>, <span class="dt">width =</span> <span class="dv">20</span>))
+p3</code></pre></div>
+<p><img src="03-dot-plot_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 </div>
   </div>
 
@@ -179,10 +250,10 @@
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#setup">Setup</a></li>
       <li><a href="#intro-get-data">Intro / get data</a></li>
-      <li><a href="#check-the-direction-of-the-edges-branches">Check the direction of the edges (Branches)</a></li>
+      <li><a href="#plot-the-panicle-graph">Plot the Panicle Graph</a></li>
       <li>
 <a href="#inspect-branching-with-a-dot-plot">Inspect Branching with a Dot Plot</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#extract-a-data-frame-from-the-graph-with-panicle_tibble">Extract a data frame from the graph with <code><a href="--/reference/panicle_tibble-html">panicle_tibble()</a></code></a></li>
+<li><a href="#extract-a-data-frame-from-the-graph-with-panicle_tibble">Extract a data frame from the graph with panicle_tibble()</a></li>
       </ul>
 </li>
       <li><a href="#visulize-with-a-tileplot">Visulize with a tileplot</a></li>

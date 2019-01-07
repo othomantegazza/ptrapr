@@ -2,7 +2,7 @@
 % Please edit documentation in R/dot-plot.R
 \name{make_idline}
 \alias{make_idline}
-\title{Make a Tibble with the Vetex ID of the Longest Path}
+\title{Make a Tibble with the Vertex ID of the Longest Path}
 \usage{
 make_idline(branch, vert_rank)
 }
@@ -14,14 +14,15 @@ panicle branch.}
 that identifies the staring vertex.}
 }
 \description{
-This function takes a panicle `igraph` as object and
+This function takes a branch `igraph` as object and
 a starting `vertex` as object, finds the longest path
-that starts from that branch.
+that starts from that vertex.
 }
 \details{
 The longest path is assumend to be the main branch axis
 
-The is a returns a `tibble` that
-stores the ranks of vertexes along that axis and
-their `type` (Secondary, Spikelet, etc.).
+This function returns a character vector that
+stores `type` of the vertexes (Secondary, Spikelet, etc.)
+along that axis ordered from the starting vertex
+(supplied in `vert_rank`) going outward.
 }

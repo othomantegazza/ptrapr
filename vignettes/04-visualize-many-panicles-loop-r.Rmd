@@ -5,8 +5,10 @@ date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{04 - Visualize Many Panicles at Once With a Loop}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 Here you will learn how to visualize the structure and the topology of many panicles with a loop.
@@ -142,7 +144,7 @@ plot_both <- function(panicle_name,
   panicle_topology_plot <- 
     panicle %>% 
     panicle_tibble(.) %>%
-    panicle_tileplot() 
+    panicle_tileplot2() 
     
   panicle %>%
   {list(panicle_structure_plot %>%

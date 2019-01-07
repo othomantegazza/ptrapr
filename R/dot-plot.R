@@ -21,17 +21,18 @@ pull_branch <- function(panicle,
     igraph::induced_subgraph(sub_verts)
 }
 
-#' Make a Tibble with the Vetex ID of the Longest Path
+#' Make a Tibble with the Vertex ID of the Longest Path
 #'
-#' This function takes a panicle `igraph` as object and
+#' This function takes a branch `igraph` as object and
 #' a starting `vertex` as object, finds the longest path
-#' that starts from that branch.
+#' that starts from that vertex.
 #'
 #' The longest path is assumend to be the main branch axis
 #'
-#' The is a returns a `tibble` that
-#' stores the ranks of vertexes along that axis and
-#' their `type` (Secondary, Spikelet, etc.).
+#' This function returns a character vector that
+#' stores `type` of the vertexes (Secondary, Spikelet, etc.)
+#' along that axis ordered from the starting vertex
+#' (supplied in `vert_rank`) going outward.
 #'
 #' @param branch an `igraph` object storing data for a
 #'     panicle branch.
@@ -51,7 +52,7 @@ make_idline <- function(branch,
     igraph::vertex_attr() %>%
     {which(.$rank == vert_rank)}
 
-  # I assume and that the the end of the branch axis
+  # I assume and that the end of the branch axis
   # correspond to the furthest vertex, and use this
   # trick to identify it
   top_node <-
@@ -70,16 +71,70 @@ make_idline <- function(branch,
 
   # I am interested in the types of the nodes in the
   # branch...
+  # and in their original rank
   node_types <-
     branch %>%
     igraph::vertex_attr() %>%
-    .$type
+    {dplyr::tibble(type = .$type, original_rank = .$rank)}
+
   # ...ranked along the nodes in the main axis of the
   # branch
-  node_types_ranked <-
+  # this returns a character vector of ordered nodes
+  out <-
     main_path$vpath %>%
     purrr::flatten_int() %>%
-    node_types[.]
+    node_types[., ] %>%
+    dplyr::mutate(branchwise_rank = main_path$vpath %>%
+             purrr::flatten_int())
+
+  # get the nodes that are downstream
+  # secondary branches and not in the
+  # main path
+  get_down_secondary <- function(vert_id) {
+
+    # the ids of vertexes direcltly downstream
+    down_vert_ids <-
+      igraph::neighbors(graph = branch,
+                        v = vert_id,
+                        mode = "out")
+
+    # the number of vertexes downstream
+    verts_down <- 0
+
+    for(i in down_vert_ids) {
+      if(! i %in% vpath){
+        subcomps <-
+          branch %>%
+          igraph::subcomponent(i,
+                               mode = "out") %>%
+          length()
+
+        verts_down <- verts_down + subcomps
+      }
+    }
+    return(verts_down)
+  }
+
+  out <-
+    out %>%
+    dplyr::mutate(nodes_downstream = list(
+      igraph::neighbors(
+        graph = branch,
+        v = .data$branchwise_rank,
+        mode = "out")
+    ))
+
+  # scaffold?
+  vpath <- main_path$vpath %>%
+    purrr::flatten_int()
+
+  # Save nodes downstream in the output of out
+  out <-
+    out %>%
+    dplyr::mutate(nodes_downstream = .data$branchwise_rank %>%
+                    purrr::map_dbl(get_down_secondary))
+
+  return(out)
 }
 
 #' Identify Start and End Generating node
@@ -185,6 +240,7 @@ panicle_tibble <- function(panicle,
     nb[keep] %>% as.numeric()
   }
 
+  # All nodes where a primary branch starts
   branch_starts <-
     main_path %>%
     purrr::map(not_primary)
@@ -207,6 +263,7 @@ panicle_tibble <- function(panicle,
     branch_starts %>%
     purrr::flatten_dbl()
 
+  # pull a subgraph from every primary node
   tb <- tibble::tibble(vert_rank = branch_starts,
                        branch = branch_starts %>%
                          purrr::map(
@@ -216,19 +273,27 @@ panicle_tibble <- function(panicle,
 
   if(!silently) {print(tb)}
 
+  # new version
   tb_list <-
     tb %>%
     purrr::pmap(make_idline) %>%
     purrr::map(
-      ~tibble::tibble(type = .,
-              node_rank = 1:length(.))
-    )
+      ~dplyr::mutate(., node_rank = 1:dplyr::n())
+      )
 
   tb_list <-
-  1:length(tb_list) %>%
-    purrr::map(~dplyr::mutate(tb_list[[.]], primary_rank = .))
+    1:length(tb_list) %>%
+    purrr::map(~dplyr::mutate(tb_list[[.]], primary_rank = .)) %>%
+    purrr::reduce(dplyr::bind_rows)
 
-  tb_list %>% purrr::reduce(dplyr::bind_rows)
+  # Two columns: original_rank and branchwise_rank are confusing
+  # and are useful only for internal calculations:
+  # remove them from the final output
+  tb_list <-
+    tb_list %>%
+    dplyr::select(-.data$original_rank, -.data$branchwise_rank) %>%
+  # and rename one in a clearer way
+    dplyr::rename(secondary_rank = "node_rank")
 }
 
 #' Plot the Output of `panicle_tibble()`
@@ -259,13 +324,82 @@ panicle_tileplot <- function(pan_tbl, draw.plot = FALSE)
     pan_tbl %>%
     ggplot2::ggplot(
       ggplot2::aes_string(
-        x = "node_rank",
+        x = "secondary_rank",
         y = "primary_rank",
         fill = "type")) +
     ggplot2::geom_tile(
       colour = "grey80",
-      size = 2)
+      size = 2) +
+    ggplot2::geom_text(data = . %>%
+                dplyr::filter(.data$type == "Seconday"),
+                ggplot2::aes_string(label = "nodes_downstream"),
+                colour = "grey20")
 
+  if(draw.plot) print(p)
+
+  return(p)
+}
+
+#' Plot the Output of `panicle_tibble()`
+#'
+#' This function is the same as `panicle_tileplot()`, with extra customization
+#' of the output plot.
+#'
+#' Returns a `ggplot2` object.
+#'
+#' This is a small utility plot function. You can use it
+#' on the output of `panicle_tibble()` to represent it as a
+#' tileplot.
+#'
+#' Although we provide this function as utility, we suggest that you design
+#' your own plotting function, because only in this way you will reach the
+#' versatlity required for exploratory data analysis. We provide ideas
+#' on how to achieve this in the vignettes.
+#'
+#' This tileplot is inspired by the plots in
+#' https://www.nature.com/articles/s41598-018-30395-9
+#'
+#' @param pan_tbl A tibble, the output of `panicle_tibble()`
+#' @param draw.plot Logical. Should the function draw a plot on the graphic device?
+#'     Defaults to `FALSE`.
+#'
+#' @export
+
+panicle_tileplot2 <- function(pan_tbl, draw.plot = FALSE)
+{
+  p <-
+    pan_tbl %>%
+    ggplot2::ggplot(
+      ggplot2::aes(
+        x = secondary_rank %>% as.character() %>% as_factor(),
+        y = primary_rank %>% as.character() %>% as_factor(),
+        fill = nodes_downstream)) + # nodes on 2ndary branches to fill colours +
+    ggplot2::geom_tile(colour = "grey80",
+               size = 1.5) +
+    ggplot2::geom_text(data = . %>%
+                dplyr::filter(type == "Seconday"), # Show the number for secondary nodes
+              ggplot2::aes(label = nodes_downstream),
+              colour = "grey30",
+              fontface = "bold",
+              size = 5) +
+    # fixed xy ratio, each tile is a square
+    ggplot2::coord_fixed() +
+    # set scale of colours and
+    # proper labels for the colour scales
+    ggplot2::scale_fill_viridis_c(
+      breaks = function(limits) c(0, 2:max(limits)),
+      labels = function(breaks) dplyr::case_when(breaks == 0 ~ "1\n[Spikelet]",
+                                                 TRUE ~ as.character(breaks)),
+      guide = ggplot2::guide_legend(nrow = 1,
+                                    # keyheight = unit(7, units = "mm"),
+                                    # keywidth = unit(7, units = "mm"),
+                                    override.aes = list(size = 0))) +
+    # fill guide on top
+    ggplot2::theme(legend.position = "top") +
+    # Clear axis names
+    ggplot2::labs(x = "Nodes rank along primary branches",
+         y = "Rank along the rachis",
+         fill = "Nodes on\n secondary branch")
   if(draw.plot) print(p)
 
   return(p)

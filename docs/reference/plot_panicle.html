@@ -63,7 +63,7 @@ inspect panicle graphs. For versatility, consider calling
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ptrapr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1</span>
       </span>
     </div>
 
@@ -105,7 +105,12 @@ inspect panicle graphs. For versatility, consider calling
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/othomantegazza/ptrapr">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -119,7 +124,7 @@ inspect panicle graphs. For versatility, consider calling
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>A simple function to Plot Panilces</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/othomantegazza/ptrapr/blob/master/R/generic-plots.R'><code>R/generic-plots.R</code></a></small>
     <div class="hidden name"><code>plot_panicle.Rd</code></div>
     </div>
 
@@ -131,7 +136,7 @@ inspect panicle graphs. For versatility, consider calling
     
     </div>
 
-    <pre class="usage"><span class='fu'>plot_panicle</span>(<span class='no'>panicle_graph</span>)</pre>
+    <pre class="usage"><span class='fu'>plot_panicle</span>(<span class='no'>panicle_graph</span>, <span class='kw'>point_size</span> <span class='kw'>=</span> <span class='fl'>1.8</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -139,6 +144,12 @@ inspect panicle graphs. For versatility, consider calling
     <tr>
       <th>panicle_graph</th>
       <td><p>a panicle graph</p></td>
+    </tr>
+    <tr>
+      <th>point_size</th>
+      <td><p>Numeric, the size of the points in the graph. You need
+to set this parameter if you want that the edges and the points in the
+graph stop overlapping. Defaults to 2 (mm).</p></td>
     </tr>
     </table>
     

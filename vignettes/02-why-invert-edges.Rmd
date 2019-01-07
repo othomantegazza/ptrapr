@@ -46,7 +46,7 @@ Compare the previous graph with the one below, repersenting the `inverted_panicl
 inverted_panicle %>% plot_panicle()
 ```
 
-# Invert edges with `invert_edges()`
+# Invert edges with invert_edges()
 
 If you find a panicle with inverted edges on the main axis, you can use the function `invert_edges()` to revert them.
 
