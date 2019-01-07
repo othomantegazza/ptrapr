@@ -1,3 +1,10 @@
+# ptrapr v0.1
+
+* Rearrange output of `panicle_tibble()`. The output is always a tibble, but with clearer column names. New column that counts nodes on secondary branches. 
+* `panicle_tileplot()` has bee adabted to match the changes above
+* Improve `plot_panicle()`, now arrows and points do not overlap.
+* `panicle_tileplot2()` has some nicer but more complicated base settings.
+
 # ptrapr v0.0.1
 
 * First release.

@@ -339,3 +339,67 @@ panicle_tileplot <- function(pan_tbl, draw.plot = FALSE)
 
   return(p)
 }
+
+#' Plot the Output of `panicle_tibble()`
+#'
+#' This function is the same as `panicle_tileplot()`, with extra customization
+#' of the output plot.
+#'
+#' Returns a `ggplot2` object.
+#'
+#' This is a small utility plot function. You can use it
+#' on the output of `panicle_tibble()` to represent it as a
+#' tileplot.
+#'
+#' Although we provide this function as utility, we suggest that you design
+#' your own plotting function, because only in this way you will reach the
+#' versatlity required for exploratory data analysis. We provide ideas
+#' on how to achieve this in the vignettes.
+#'
+#' This tileplot is inspired by the plots in
+#' https://www.nature.com/articles/s41598-018-30395-9
+#'
+#' @param pan_tbl A tibble, the output of `panicle_tibble()`
+#' @param draw.plot Logical. Should the function draw a plot on the graphic device?
+#'     Defaults to `FALSE`.
+#'
+#' @export
+
+panicle_tileplot2 <- function(pan_tbl, draw.plot = FALSE)
+{
+  p <-
+    pan_tbl %>%
+    ggplot2::ggplot(
+      ggplot2::aes(
+        x = secondary_rank %>% as.character() %>% as_factor(),
+        y = primary_rank %>% as.character() %>% as_factor(),
+        fill = nodes_downstream)) + # nodes on 2ndary branches to fill colours +
+    geom_tile(colour = "grey80",
+               size = 1.5) +
+    geom_text(data = . %>%
+                filter(type == "Seconday"), # Show the number for secondary nodes
+              aes(label = nodes_downstream),
+              colour = "grey30",
+              fontface = "bold",
+              size = 5) +
+    # fixed xy ratio, each tile is a square
+    coord_fixed() +
+    # set scale of colours and
+    # proper labels for the colour scales
+    scale_fill_viridis(breaks = function(limits) c(0, 2:max(limits)),
+                       labels = function(breaks) case_when(breaks == 0 ~ "1\n[Spikelet]",
+                                                           TRUE ~ as.character(breaks)),
+                       guide = guide_legend(nrow = 1,
+                                            keyheight = unit(7, units = "mm"),
+                                            keywidth=unit(7, units = "mm"),
+                                            override.aes = list(size = 0))) +
+    # fill guide on top
+    theme(legend.position = "top") +
+    # Clear axis names
+    labs(x = "Nodes rank along primary branches",
+         y = "Rank along the rachis",
+         fill = str_wrap("Nodes on secondary branch", width = 20))
+  if(draw.plot) print(p)
+
+  return(p)
+}
