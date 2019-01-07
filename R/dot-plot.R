@@ -131,7 +131,7 @@ make_idline <- function(branch,
   # Save nodes downstream in the output of out
   out <-
     out %>%
-    dplyr::mutate(nodes_downstream = branchwise_rank %>%
+    dplyr::mutate(nodes_downstream = .data$branchwise_rank %>%
                     purrr::map_dbl(get_down_secondary))
 
   return(out)
@@ -330,10 +330,10 @@ panicle_tileplot <- function(pan_tbl, draw.plot = FALSE)
     ggplot2::geom_tile(
       colour = "grey80",
       size = 2) +
-    geom_text(data = . %>%
+    ggplot2::geom_text(data = . %>%
                 dplyr::filter(.data$type == "Seconday"),
-              aes_string(label = "nodes_downstream"),
-              colour = "grey20")
+                ggplot2::aes_string(label = "nodes_downstream"),
+                colour = "grey20")
 
   if(draw.plot) print(p)
 
@@ -374,31 +374,32 @@ panicle_tileplot2 <- function(pan_tbl, draw.plot = FALSE)
         x = secondary_rank %>% as.character() %>% as_factor(),
         y = primary_rank %>% as.character() %>% as_factor(),
         fill = nodes_downstream)) + # nodes on 2ndary branches to fill colours +
-    geom_tile(colour = "grey80",
+    ggplot2::geom_tile(colour = "grey80",
                size = 1.5) +
-    geom_text(data = . %>%
-                filter(type == "Seconday"), # Show the number for secondary nodes
-              aes(label = nodes_downstream),
+    ggplot2::geom_text(data = . %>%
+                dplyr::filter(type == "Seconday"), # Show the number for secondary nodes
+              ggplot2::aes(label = nodes_downstream),
               colour = "grey30",
               fontface = "bold",
               size = 5) +
     # fixed xy ratio, each tile is a square
-    coord_fixed() +
+    ggplot2::coord_fixed() +
     # set scale of colours and
     # proper labels for the colour scales
-    scale_fill_viridis(breaks = function(limits) c(0, 2:max(limits)),
-                       labels = function(breaks) case_when(breaks == 0 ~ "1\n[Spikelet]",
-                                                           TRUE ~ as.character(breaks)),
-                       guide = guide_legend(nrow = 1,
-                                            keyheight = unit(7, units = "mm"),
-                                            keywidth=unit(7, units = "mm"),
-                                            override.aes = list(size = 0))) +
+    ggplot2::scale_fill_viridis_c(
+      breaks = function(limits) c(0, 2:max(limits)),
+      labels = function(breaks) dplyr::case_when(breaks == 0 ~ "1\n[Spikelet]",
+                                                 TRUE ~ as.character(breaks)),
+      guide = ggplot2::guide_legend(nrow = 1,
+                                    # keyheight = unit(7, units = "mm"),
+                                    # keywidth = unit(7, units = "mm"),
+                                    override.aes = list(size = 0))) +
     # fill guide on top
-    theme(legend.position = "top") +
+    ggplot2::theme(legend.position = "top") +
     # Clear axis names
-    labs(x = "Nodes rank along primary branches",
+    ggplot2::labs(x = "Nodes rank along primary branches",
          y = "Rank along the rachis",
-         fill = str_wrap("Nodes on secondary branch", width = 20))
+         fill = "Nodes on\n secondary branch")
   if(draw.plot) print(p)
 
   return(p)
