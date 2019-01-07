@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • ptrapr</title>
+<title>Plot the Output of `panicle_tibble()` — panicle_tileplot2 • ptrapr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,7 +30,11 @@
 
 
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="Plot the Output of `panicle_tibble()` — panicle_tileplot2" />
+
+<meta property="og:description" content="This function is the same as `panicle_tileplot()`, with extra customization
+of the output plot." />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -46,7 +50,7 @@
   </head>
 
   <body>
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -118,41 +122,57 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>Plot the Output of `panicle_tibble()`</h1>
+    <small class="dont-index">Source: <a href='https://github.com/othomantegazza/ptrapr/blob/master/R/dot-plot.R'><code>R/dot-plot.R</code></a></small>
+    <div class="hidden name"><code>panicle_tileplot2.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>01 - Load Panicles Files Into R</h3>
-      <p class="section-desc"></p>
-
-      <ul>
-        <li><a href="01-load-files.html">01 - Load Panicles Files Into R</a></li>
-      </ul>
+    <div class="ref-description">
+    
+    <p>This function is the same as `panicle_tileplot()`, with extra customization
+of the output plot.</p>
+    
     </div>
-    <div class="section ">
-      <h3>02 - Why and How to Invert Edges</h3>
-      <p class="section-desc"></p>
 
-      <ul>
-        <li><a href="02-why-invert-edges.html">02 - Why and How to Invert Edges</a></li>
-      </ul>
-    </div>
-    <div class="section ">
-      <h3>03 - Visualize The Topology of a Panicle</h3>
-      <p class="section-desc"></p>
+    <pre class="usage"><span class='fu'>panicle_tileplot2</span>(<span class='no'>pan_tbl</span>, <span class='kw'>draw.plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>pan_tbl</th>
+      <td><p>A tibble, the output of `panicle_tibble()`</p></td>
+    </tr>
+    <tr>
+      <th>draw.plot</th>
+      <td><p>Logical. Should the function draw a plot on the graphic device?
+Defaults to `FALSE`.</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-      <ul>
-        <li><a href="03-dot-plot.html">03 - Visualize The Topology of a Panicle</a></li>
-      </ul>
-    </div>
-    <div class="section ">
-      <h3>04 - Visualize Many Panicles at Once With a Loop</h3>
-      <p class="section-desc"></p>
+    <p>Returns a `ggplot2` object.</p>
+<p>This is a small utility plot function. You can use it
+on the output of `panicle_tibble()` to represent it as a
+tileplot.</p>
+<p>Although we provide this function as utility, we suggest that you design
+your own plotting function, because only in this way you will reach the
+versatlity required for exploratory data analysis. We provide ideas
+on how to achieve this in the vignettes.</p>
+<p>This tileplot is inspired by the plots in
+https://www.nature.com/articles/s41598-018-30395-9</p>
+    
 
-      <ul>
-        <li><a href="04-visualize-many-panicles-loop-r.html">04 - Visualize Many Panicles at Once With a Loop</a></li>
-      </ul>
-    </div>
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#details">Details</a></li>
+          </ul>
+
   </div>
 </div>
 

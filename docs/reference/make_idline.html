@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Make a Tibble with the Vetex ID of the Longest Path — make_idline • ptrapr</title>
+<title>Make a Tibble with the Vertex ID of the Longest Path — make_idline • ptrapr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,11 +30,11 @@
 
 
 
-<meta property="og:title" content="Make a Tibble with the Vetex ID of the Longest Path — make_idline" />
+<meta property="og:title" content="Make a Tibble with the Vertex ID of the Longest Path — make_idline" />
 
-<meta property="og:description" content="This function takes a panicle `igraph` as object and
+<meta property="og:description" content="This function takes a branch `igraph` as object and
 a starting `vertex` as object, finds the longest path
-that starts from that branch." />
+that starts from that vertex." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -63,7 +63,7 @@ that starts from that branch." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ptrapr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1</span>
       </span>
     </div>
 
@@ -105,7 +105,12 @@ that starts from that branch." />
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/othomantegazza/ptrapr">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -118,16 +123,16 @@ that starts from that branch." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Make a Tibble with the Vetex ID of the Longest Path</h1>
-    
+    <h1>Make a Tibble with the Vertex ID of the Longest Path</h1>
+    <small class="dont-index">Source: <a href='https://github.com/othomantegazza/ptrapr/blob/master/R/dot-plot.R'><code>R/dot-plot.R</code></a></small>
     <div class="hidden name"><code>make_idline.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function takes a panicle `igraph` as object and
+    <p>This function takes a branch `igraph` as object and
 a starting `vertex` as object, finds the longest path
-that starts from that branch.</p>
+that starts from that vertex.</p>
     
     </div>
 
@@ -151,9 +156,10 @@ that identifies the staring vertex.</p></td>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The longest path is assumend to be the main branch axis</p>
-<p>The is a returns a `tibble` that
-stores the ranks of vertexes along that axis and
-their `type` (Secondary, Spikelet, etc.).</p>
+<p>This function returns a character vector that
+stores `type` of the vertexes (Secondary, Spikelet, etc.)
+along that axis ordered from the starting vertex
+(supplied in `vert_rank`) going outward.</p>
     
 
   </div>

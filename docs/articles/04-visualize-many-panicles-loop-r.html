@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ptrapr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.0.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1</span>
       </span>
     </div>
 
@@ -69,7 +69,14 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/othomantegazza/ptrapr">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -84,9 +91,9 @@
       <h1>04 - Visualize Many Panicles at Once With a Loop</h1>
                         <h4 class="author">Otho Mantegazza</h4>
             
-            <h4 class="date">2018-12-07</h4>
+            <h4 class="date">2019-01-08</h4>
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/othomantegazza/ptrapr/blob/master/vignettes/04-visualize-many-panicles-loop-r.Rmd"><code>vignettes/04-visualize-many-panicles-loop-r.Rmd</code></a></small>
       <div class="hidden name"><code>04-visualize-many-panicles-loop-r.Rmd</code></div>
 
     </div>
@@ -118,7 +125,7 @@ panicle_paths &lt;-<span class="st"> </span>
 <span class="st">  </span><span class="kw">list.files</span>(path_to_folder) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># remove the extension (variable part)</span>
 <span class="st">  </span><span class="co"># each panicle has two files with different extension</span>
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/stringr/topics/str_remove">str_remove</a></span>(<span class="st">".ricegr|.ricepr"</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="https://stringr.tidyverse.org/reference/str_remove.html">str_remove</a></span>(<span class="st">".ricegr|.ricepr"</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># store the name of the files without the extension</span>
 <span class="st">  </span><span class="kw">unique</span>()
 
@@ -135,13 +142,13 @@ panicle_paths &lt;-
 <div id="parse-all-panicles" class="section level1">
 <h1 class="hasAnchor">
 <a href="#parse-all-panicles" class="anchor"></a>Parse All Panicles</h1>
-<p>Afterwards, you can loop the main worflow on the named object <code>panicle_paths</code> with <code><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map()</a></code>. This function from the package <code>purrr</code> is convenient because it loops over r objects preserving their names.</p>
+<p>Afterwards, you can loop the main worflow on the named object <code>panicle_paths</code> with <code><a href="https://purrr.tidyverse.org/reference/map.html">map()</a></code>. This function from the package <code>purrr</code> is convenient because it loops over r objects preserving their names.</p>
 <p>Here we show you how build loops over the functions of <code>ptrapr</code> one by one.</p>
 <p>First parse and load all the files with <code><a href="../reference/read_full_panicle.html">read_full_panicle()</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Parse them in a list, using file name as list names</span>
 panicle_list &lt;-<span class="st"> </span>
 <span class="st">  </span>panicle_paths <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(<span class="op">~</span><span class="kw"><a href="../reference/read_full_panicle.html">read_full_panicle</a></span>(.)) 
+<span class="st">  </span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="op">~</span><span class="kw"><a href="../reference/read_full_panicle.html">read_full_panicle</a></span>(.)) 
 
 <span class="co"># alternative</span>
 <span class="co"># panicle_list &lt;- </span>
@@ -153,8 +160,8 @@ panicle_list &lt;-<span class="st"> </span>
 <p>Then correct the edges on the main axis with <code><a href="../reference/invert_edges.html">invert_edges()</a></code></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">panicle_list &lt;-<span class="st"> </span>
 <span class="st">  </span>panicle_list <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(<span class="op">~</span><span class="kw"><a href="../reference/invert_edges.html">invert_edges</a></span>(., <span class="dt">check_before =</span> <span class="ot">TRUE</span>))</code></pre></div>
-<p>As you can see, <code><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map()</a></code> preserves the names of <code>panicle_list</code>.</p>
+<span class="st">  </span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="op">~</span><span class="kw"><a href="../reference/invert_edges.html">invert_edges</a></span>(., <span class="dt">check_before =</span> <span class="ot">TRUE</span>))</code></pre></div>
+<p>As you can see, <code><a href="https://purrr.tidyverse.org/reference/map.html">map()</a></code> preserves the names of <code>panicle_list</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(panicle_list)</code></pre></div>
 <pre><code>## [1] "1_1_6307" "1_2_6308" "1_3_6309" "2_1_6310" "2_2_6311" "2_3_6312"
 ## [7] "3_1_6313" "3_2_6314" "3_3_6315"</code></pre>
@@ -193,7 +200,7 @@ panicle_list &lt;-<span class="st"> </span>
   panicle_topology_plot &lt;-<span class="st"> </span>
 <span class="st">    </span>panicle <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">    </span><span class="kw"><a href="../reference/panicle_tibble.html">panicle_tibble</a></span>(.) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw"><a href="../reference/panicle_tileplot.html">panicle_tileplot</a></span>() 
+<span class="st">    </span><span class="kw"><a href="../reference/panicle_tileplot2.html">panicle_tileplot2</a></span>() 
     
   panicle <span class="op">%&gt;%</span>
 <span class="st">  </span>{<span class="kw">list</span>(panicle_structure_plot <span class="op">%&gt;%</span>
@@ -207,8 +214,8 @@ panicle_list &lt;-<span class="st"> </span>
 panicle_list <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># loop over names, so that they can be used as plot titles</span>
 <span class="st">  </span><span class="kw">names</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(plot_both) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(<span class="op">~</span>cowplot<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/cowplot/topics/plot_grid">plot_grid</a></span>(<span class="dt">plotlist =</span> .,
+<span class="st">  </span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(plot_both) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="op">~</span>cowplot<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/cowplot/topics/plot_grid">plot_grid</a></span>(<span class="dt">plotlist =</span> .,
                           <span class="dt">nrow =</span> <span class="dv">2</span>)) <span class="op">%&gt;%</span>
 <span class="st">    </span><span class="kw">print</span>()
 
