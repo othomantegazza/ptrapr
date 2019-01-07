@@ -285,6 +285,15 @@ panicle_tibble <- function(panicle,
     1:length(tb_list) %>%
     purrr::map(~dplyr::mutate(tb_list[[.]], primary_rank = .)) %>%
     purrr::reduce(dplyr::bind_rows)
+
+  # Two columns: original_rank and branchwise_rank are confusing
+  # and are useful only for internal calculations:
+  # remove them from the final output
+  tb_list <-
+    tb_list %>%
+    dplyr::select(-.data$original_rank, -.data$branchwise_rank) %>%
+  # and rename one in a clearer way
+    dplyr::rename(secondary_rank = "node_rank")
 }
 
 #' Plot the Output of `panicle_tibble()`
@@ -315,7 +324,7 @@ panicle_tileplot <- function(pan_tbl, draw.plot = FALSE)
     pan_tbl %>%
     ggplot2::ggplot(
       ggplot2::aes_string(
-        x = "node_rank",
+        x = "secondary_rank",
         y = "primary_rank",
         fill = "type")) +
     ggplot2::geom_tile(
