@@ -1,0 +1,91 @@
+---
+title: "05 - Extract and Save Basic Panicle Features"
+author: "Otho Mantegazza"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{05 - Extract and Save Basic Panicle Features}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options:
+  chunk_output_type: console
+---
+
+# Setup
+
+```{r, message=FALSE}
+library(ptrapr)
+library(magrittr)
+library(igraph)
+library(dplyr)
+library(purrr)
+```
+
+# Extract features
+
+You can easily extract features from a panicle object, such as number of branches and spikelets. Any panicle object is build upon an `igraph` object, so you can use functions from `igraph` to extract features from panicles.  Or learn a few tricks below.
+
+We can start from the object `good_panicle`.
+
+```{r}
+good_panicle %>% plot_panicle()
+```
+
+# Features from one panicle with vertex_attr()
+
+The function `vertex_attr()` from igraph extracts the attributes from all the nodes (vertexes) of a panicle.
+
+```{r}
+nodes_df <- 
+  good_panicle %>% 
+  vertex_attr() %>% 
+  # The output of vertex_attr() is a list,
+  # but  we can manipulate it more easily 
+  # if we turn it into a data frame
+  as_tibble()
+```
+
+This is the output of `vertex_attr()`, the column `type` stores the type of each node (primary, secondary, etc.):
+
+```{r}
+# use head() to take only the first 6 rows
+nodes_df %>% head() %>% knitr::kable()
+```
+
+## These are the panicle features
+
+We can count the feature with dplyr's `count()`. These are the features from one panicle.
+
+```{r}
+pan_feats <- 
+  nodes_df %>% 
+  group_by(type) %>% 
+  count()
+```
+
+```{r, echo = FALSE}
+pan_feats %>% knitr::kable()
+```
+
+# loop over many panicles with map() and reduce()
+
+```{r}
+# put all the panicles into a list
+panicle_list <- list(good_panicle,
+                     inverted_panicle %>% invert_edges())
+```
+
+```{r}
+# loop with map
+panicle_features <- 
+  panicle_list %>% 
+  map(~vertex_attr(.) %>%
+        as_tibble() %>%
+        group_by(type) %>% 
+        count()) %>% 
+  reduce(left_join, by = "type")
+```
+
+# More about  igraph and tidygraph
+
+Check the [igraph website](https://igraph.org/r/) for a details about it, also [tidygraph](https://www.data-imaginist.com/2017/introducing-tidygraph/) can be useful.
