@@ -7,3 +7,5 @@ articles:
   contents: 03-dot-plot
 - title: 04 - Visualize Many Panicles at Once With a Loop
   contents: 04-visualize-many-panicles-loop-r
+- title: 05 - Extract Panicle Features in a Dataframe
+  contents: 05-extract-features

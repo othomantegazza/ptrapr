@@ -14,7 +14,7 @@ editor_options:
 # Setup
 
 ```{r, message=FALSE}
-# library(ptrapr)
+library(ptrapr)
 library(magrittr)
 library(igraph)
 library(dplyr)
@@ -73,7 +73,7 @@ pan_feats %>% knitr::kable()
 
 ## load many panicles
 
-As in [the previous vignette](04-visualize-many-panicles-loop-r.html), you can parse many panicles and put them in a list.
+As in [the previous vignette](04-visualize-many-panicles-loop-r.html), you can parse many panicles and put them in a list. Check that vignette to for a torough explaination of these steps.
 
 ```{r, echo = FALSE}
 path_to_folder <- system.file(package = "ptrapr") %>%
@@ -111,16 +111,25 @@ panicle_list <-
 names(panicle_list)
 ```
 
+Afterwards you can `map()`, `bind_rows()` and `spread()` to collect all the features in a database.
+
 ```{r, eval = FALSE}
-panicle_list %>% 
+panicles_feature <- 
+  panicle_list %>% 
   map(~vertex_attr(.) %>%
-        as_tibble()) %>% 
-  map(~group_by(., type) %>%
+        as_tibble() %>% 
+        group_by(type) %>%
         count()) %>%  #%>% 
         # {set_names(x = .$n, nm = .$type)}) %>% 
   bind_rows(.id = "id") %>% 
   spread(key = "type", value = "n")
+
+panicles_feature
 ```
+
+The last step `spread()` is not necessary, depends if need like your data in [long or wide format](https://r4ds.had.co.nz/tidy-data.html#spreading-and-gathering).
+
+Let me know if you want me to code these steps in a function.
 
 # More about  igraph and tidygraph
 

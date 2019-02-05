@@ -6,6 +6,7 @@ articles:
   02-why-invert-edges: 02-why-invert-edges.html
   03-dot-plot: 03-dot-plot.html
   04-visualize-many-panicles-loop-r: 04-visualize-many-panicles-loop-r.html
+  05-extract-features: 05-extract-features.html
   _deal-with-graphs: _deal-with-graphs.html
   _graph_compendium: _graph_compendium.html
   _test: _test.html
