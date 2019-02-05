@@ -14,11 +14,13 @@ editor_options:
 # Setup
 
 ```{r, message=FALSE}
-library(ptrapr)
+# library(ptrapr)
 library(magrittr)
 library(igraph)
 library(dplyr)
 library(purrr)
+library(stringr)
+library(tidyr)
 ```
 
 # Extract features
@@ -69,21 +71,55 @@ pan_feats %>% knitr::kable()
 
 # loop over many panicles with map() and reduce()
 
-```{r}
-# put all the panicles into a list
-panicle_list <- list(good_panicle,
-                     inverted_panicle %>% invert_edges())
+## load many panicles
+
+As in [the previous vignette](04-visualize-many-panicles-loop-r.html), you can parse many panicles and put them in a list.
+
+```{r, echo = FALSE}
+path_to_folder <- system.file(package = "ptrapr") %>%
+  paste0("/extdata") 
+
+
+# First record the names of the files
+# substitute path_to_folder with the path to your folder
+panicle_paths <- 
+  list.files(path_to_folder) %>%
+  # remove the extension (variable part)
+  # each panicle has two files with different extension
+  str_remove(".ricegr|.ricepr") %>%
+  # store the name of the files without the extension
+  unique()
+
+panicle_paths
+# Store file names in named object, to use them later
+panicle_paths <-
+  panicle_paths %>% 
+  {set_names(x = paste(path_to_folder, ., sep = "/"), nm = .)}
+
+# Parse them in a list, using file name as list names
+panicle_list <- 
+  panicle_paths %>%
+  map(~read_full_panicle(.)) 
+
+
+# Then correct the edges on the main axis with invert_edges()
+panicle_list <- 
+  panicle_list %>% 
+  map(~invert_edges(., check_before = TRUE))
+
+
+names(panicle_list)
 ```
 
-```{r}
-# loop with map
-panicle_features <- 
-  panicle_list %>% 
+```{r, eval = FALSE}
+panicle_list %>% 
   map(~vertex_attr(.) %>%
-        as_tibble() %>%
-        group_by(type) %>% 
-        count()) %>% 
-  reduce(left_join, by = "type")
+        as_tibble()) %>% 
+  map(~group_by(., type) %>%
+        count()) %>%  #%>% 
+        # {set_names(x = .$n, nm = .$type)}) %>% 
+  bind_rows(.id = "id") %>% 
+  spread(key = "type", value = "n")
 ```
 
 # More about  igraph and tidygraph
