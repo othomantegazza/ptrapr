@@ -73,7 +73,7 @@ pan_feats %>% knitr::kable()
 
 ## load many panicles
 
-As in [the previous vignette](04-visualize-many-panicles-loop-r.html), you can parse many panicles and put them in a list. Check that vignette to for a torough explaination of these steps.
+As in [the previous vignette](04-visualize-many-panicles-loop-r.html), you can parse many panicles and put them in a list. Check that vignette to for a thorough explanation of these steps.
 
 ```{r, echo = FALSE}
 path_to_folder <- system.file(package = "ptrapr") %>%
@@ -127,7 +127,8 @@ panicles_feature <-
 panicles_feature
 ```
 
-The last step `spread()` is not necessary, depends if need like your data in [long or wide format](https://r4ds.had.co.nz/tidy-data.html#spreading-and-gathering).
+The last step `spread()` is not necessary,  but it is [suggested to tidy your dataset](https://r4ds.had.co.nz/tidy-data.html#spreading-and-gathering). 
+Since, according to the tidy data concept, **each observation must have its own row**, here we use `spread()` to collect all observations concerning one single panicle that are scattered across multiple rows, and to put them in one single row.
 
 Let me know if you want me to code these steps in a function.
 

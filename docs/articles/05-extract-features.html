@@ -94,7 +94,7 @@
       <h1>05 - Extract and Save Basic Panicle Features</h1>
                         <h4 class="author">Otho Mantegazza</h4>
             
-            <h4 class="date">2019-02-05</h4>
+            <h4 class="date">2019-02-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/othomantegazza/ptrapr/blob/master/vignettes/05-extract-features.Rmd"><code>vignettes/05-extract-features.Rmd</code></a></small>
       <div class="hidden name"><code>05-extract-features.Rmd</code></div>
@@ -233,7 +233,7 @@ nodes_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"
 <div id="load-many-panicles" class="section level2">
 <h2 class="hasAnchor">
 <a href="#load-many-panicles" class="anchor"></a>load many panicles</h2>
-<p>As in <a href="04-visualize-many-panicles-loop-r.html">the previous vignette</a>, you can parse many panicles and put them in a list. Check that vignette to for a torough explaination of these steps.</p>
+<p>As in <a href="04-visualize-many-panicles-loop-r.html">the previous vignette</a>, you can parse many panicles and put them in a list. Check that vignette to for a thorough explanation of these steps.</p>
 <pre><code>## [1] "1_1_6307" "1_2_6308" "1_3_6309" "2_1_6310" "2_2_6311" "2_3_6312"
 ## [7] "3_1_6313" "3_2_6314" "3_3_6315"</code></pre>
 <pre><code>## [1] "1_1_6307" "1_2_6308" "1_3_6309" "2_1_6310" "2_2_6311" "2_3_6312"
@@ -250,7 +250,7 @@ nodes_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"
 <span class="st">  </span><span class="kw"><a href="https://tidyr.tidyverse.org/reference/spread.html">spread</a></span>(<span class="dt">key =</span> <span class="st">"type"</span>, <span class="dt">value =</span> <span class="st">"n"</span>)
 
 panicles_feature</code></pre></div>
-<p>The last step <code><a href="https://tidyr.tidyverse.org/reference/spread.html">spread()</a></code> is not necessary, depends if need like your data in <a href="https://r4ds.had.co.nz/tidy-data.html#spreading-and-gathering">long or wide format</a>.</p>
+<p>The last step <code><a href="https://tidyr.tidyverse.org/reference/spread.html">spread()</a></code> is not necessary, but it is <a href="https://r4ds.had.co.nz/tidy-data.html#spreading-and-gathering">suggested to tidy your dataset</a>. Since, according to the tidy data concept, <strong>each observation must have its own row</strong>, here we use <code><a href="https://tidyr.tidyverse.org/reference/spread.html">spread()</a></code> to collect all observations concerning one single panicle that are scattered across multiple rows, and to put them in one single row.</p>
 <p>Let me know if you want me to code these steps in a function.</p>
 </div>
 </div>
