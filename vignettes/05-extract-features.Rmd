@@ -119,7 +119,7 @@ you can use `map()`, `bind_rows()` and `spread()` to collect all the features in
 ```{r}
 panicles_feature <- 
   panicle_list %>% 
-  # This is the core of the loop in wich
+  # This is the core of the loop in which
   # we apply the steps to extract panicle features
   # on all the panicles
   map(~vertex_attr(.) %>%
