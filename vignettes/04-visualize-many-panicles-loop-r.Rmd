@@ -36,7 +36,7 @@ That folder must contain nothing else.
 
 For all the files stored in one folder, we load their name in R in this way:
 
-```{r, echo = FALSE}
+ ```{r, echo = FALSE}
 path_to_folder <- system.file(package = "ptrapr") %>%
   paste0("/extdata") 
 ```

@@ -1,4 +1,4 @@
-#' Read Panicle Spacial Graph
+#' Read Panicle Spatial Graph
 #'
 #'
 #' Read the XML file that stores panicles architecture
@@ -49,7 +49,7 @@ read_panicle <- function(path) {
 }
 
 
-#' Read Grain Spacial Graph
+#' Read Grain Spatial Graph
 #'
 #' Read the XML file that stores grain location
 #' (the P-TRAP output that ends by .ricegr)
