@@ -371,8 +371,8 @@ panicle_tileplot2 <- function(pan_tbl, draw.plot = FALSE)
     pan_tbl %>%
     ggplot2::ggplot(
       ggplot2::aes(
-        x = secondary_rank %>% as.character() %>% as_factor(),
-        y = primary_rank %>% as.character() %>% as_factor(),
+        x = secondary_rank %>% as.character() %>% forcats::as_factor(),
+        y = primary_rank %>% as.character() %>% forcats::as_factor(),
         fill = nodes_downstream)) + # nodes on 2ndary branches to fill colours +
     ggplot2::geom_tile(colour = "grey80",
                size = 1.5) +

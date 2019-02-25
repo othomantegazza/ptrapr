@@ -1,7 +1,7 @@
 Package: ptrapr
 Type: Package
 Title: Analyze the Structure of Rice Panicles
-Version: 0.1.0.9000
+Version: 0.1.1
 Authors@R: person("Otho", "Mantegazza", email = "otho.mantegazza@gmail.com",
 				          role = c("aut", "cre"))
 Description: With this package you can analyze the architecture and topology
@@ -27,12 +27,13 @@ Imports:
     sp (>= 1.3-1),
     tibble (>= 1.4.2),
     tidygraph (>= 1.1.0),
-    xml2 (>= 1.2.0)
+    xml2 (>= 1.2.0),
+    ellipsis(>= 0.1.0),
+    forcats(>= 0.3.0)
 RoxygenNote: 6.1.0
 Suggests: 
     knitr,
     rmarkdown,
     cowplot,
-    stringr,
-    forcats
+    stringr
 VignetteBuilder: knitr

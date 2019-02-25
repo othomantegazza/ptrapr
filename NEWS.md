@@ -1,3 +1,7 @@
+# ptrapr v0.1.1
+
+* Seconday to Secondary
+
 # ptrapr v0.1
 
 * Rearrange output of `panicle_tibble()`. The output is always a tibble, but with clearer column names. New column that counts nodes on secondary branches. 

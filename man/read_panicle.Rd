@@ -2,7 +2,7 @@
 % Please edit documentation in R/parser.R
 \name{read_panicle}
 \alias{read_panicle}
-\title{Read Panicle Spacial Graph}
+\title{Read Panicle Spatial Graph}
 \usage{
 read_panicle(path)
 }

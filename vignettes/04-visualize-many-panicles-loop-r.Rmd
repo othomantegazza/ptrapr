@@ -30,25 +30,33 @@ library(cowplot)
 
 # Place All files in one single folder
 
-Place the structure files (`.ricepr`) and their corrispective grain files (`ricegr`) of all the panicles that you want to analyze in one single folder. For every single panicle the name of the structure file and the name of the gr file must be exaclty the same (obviously beside the extension).
+Place the structure files (`.ricepr`) and their corrispective grain files (`ricegr`) of all the panicles that you want to analyze in one single folder. For every single panicle the name of the `.ricepr` file and the name of the `.ricegr` file must be exaclty the same (obviously beside the extension).
 
 That folder must contain nothing else.
 
-For all the files stored in one folder, we load their name in R in this way:
+For all the files stored in one folder, we prepare their paths in a list in this way:
 
- ```{r, echo = FALSE}
+```{r, echo = FALSE}
 path_to_folder <- system.file(package = "ptrapr") %>%
   paste0("/extdata") 
 ```
 
 
+```{r, eval = FALSE}
+# First store the path to your folder
+# in a variable called path_to_folder.
+# substitute "path/to/folder", with the path to your folder!
+
+path_to_folder <- "path/to/folder"
+```
+
+
 ```{r}
-# First record the names of the files
-# substitute path_to_folder with the path to your folder
+# First record the names of all the files,
 panicle_paths <- 
   list.files(path_to_folder) %>%
-  # remove the extension (variable part)
-  # each panicle has two files with different extension
+  # remove the extension,
+  # (each panicle has two files with different extension)
   str_remove(".ricegr|.ricepr") %>%
   # store the name of the files without the extension
   unique()
@@ -56,9 +64,9 @@ panicle_paths <-
 panicle_paths
 ```
 
-We find it very useful to store the panicle names in a named object (such a named character vector). In this way the names are preserved through the loops.
+We find it very useful to store the panicle names in a named object (such a named character vector). Because the function map, that we will use to loop over this object, maintains the names of the object in its output. In this way we keep track of the panicle IDs during the loops.
 
-Here we use a `magrittr` trick to pass the LHS (left hand side) argument to the next function in anywhere we want it. To do this, enclose the RHS function in curly brackets and call the LHS with a dot ".".
+Here we create a named object using a `magrittr` trick: we use the curly brackets `{}` to pass the LHS (left hand side) argument to the RHS (right hand side) of the pipe anywhere we want it as a dot `.`. To do this, we enclose the RHS function in curly brackets and call the LHS with a dot ".".
 
 ```{r}
 # Store file names in named object, to use them later
@@ -66,6 +74,13 @@ panicle_paths <-
   panicle_paths %>% 
   {set_names(x = paste(path_to_folder, ., sep = "/"), nm = .)}
 ```
+
+Now the object `panicle_paths` stores the paths to al the panicles in a named object.
+
+```{r}
+panicle_paths
+```
+
 
 # Parse All Panicles
 

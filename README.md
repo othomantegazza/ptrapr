@@ -31,3 +31,11 @@ Access here **online** the [full documentation](https://othomantegazza.github.io
 # Warranty
 
 This package is under active development and comes with no warranty.
+
+# Build from source
+
+
+```r
+devtools::build(vignettes = FALSE)
+devtools::check(build_args = "--no-build-vignettes", args = "--no-build-vignettes")
+```

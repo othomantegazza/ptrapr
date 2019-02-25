@@ -2,7 +2,7 @@
 % Please edit documentation in R/parser.R
 \name{read_grains}
 \alias{read_grains}
-\title{Read Grain Spacial Graph}
+\title{Read Grain Spatial Graph}
 \usage{
 read_grains(path)
 }
