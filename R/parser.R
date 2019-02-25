@@ -28,7 +28,9 @@ read_panicle <- function(path) {
                             xml2::xml_attr("type"),
                           id = vertices %>%
                             xml2::xml_attr("id")) %>%
-    dplyr::mutate(rank = 1:dplyr::n())
+    dplyr::mutate(rank = 1:dplyr::n(),
+                  type = dplyr::case_when(type == "Seconday" ~ "Secondary",
+                                          TRUE ~ type))
 
   nodes_rank <- purrr::set_names(x = nodes$rank,
                                  nm = nodes$id)

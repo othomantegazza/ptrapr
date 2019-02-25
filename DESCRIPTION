@@ -1,7 +1,7 @@
 Package: ptrapr
 Type: Package
 Title: Analyze the Structure of Rice Panicles
-Version: 0.1
+Version: 0.1.0.9000
 Authors@R: person("Otho", "Mantegazza", email = "otho.mantegazza@gmail.com",
 				          role = c("aut", "cre"))
 Description: With this package you can analyze the architecture and topology
