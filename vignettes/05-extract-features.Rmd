@@ -73,9 +73,9 @@ pan_feats %>% knitr::kable()
 
 ## load many panicles
 
-As in [the previous vignette](04-visualize-many-panicles-loop-r.html), you can parse many panicles and put them in a list. Check that vignette to for a torough explaination of these steps.
+As in [the previous vignette](04-visualize-many-panicles-loop-r.html) "Visualize Many Panicles at Once with a Loop", you can parse many panicles and put them in a list. Check that vignette for a thorough explanation of these step:
 
-```{r, echo = FALSE}
+```{r}
 path_to_folder <- system.file(package = "ptrapr") %>%
   paste0("/extdata") 
 
@@ -90,7 +90,6 @@ panicle_paths <-
   # store the name of the files without the extension
   unique()
 
-panicle_paths
 # Store file names in named object, to use them later
 panicle_paths <-
   panicle_paths %>% 
@@ -111,26 +110,37 @@ panicle_list <-
 names(panicle_list)
 ```
 
-Afterwards you can `map()`, `bind_rows()` and `spread()` to collect all the features in a database.
+Now all the panicles are collected in a named list,
 
-```{r, eval = FALSE}
+## Store features from many panicles in a dataset
+
+you can use `map()`, `bind_rows()` and `spread()` to collect all the features in a database.
+
+```{r}
 panicles_feature <- 
   panicle_list %>% 
+  # This is the core of the loop in which
+  # we apply the steps to extract panicle features
+  # on all the panicles
   map(~vertex_attr(.) %>%
         as_tibble() %>% 
         group_by(type) %>%
-        count()) %>%  #%>% 
-        # {set_names(x = .$n, nm = .$type)}) %>% 
+        count()) %>%
+  # The next steps transform the list of panicle features
+  # into a tidy dataset
   bind_rows(.id = "id") %>% 
   spread(key = "type", value = "n")
-
-panicles_feature
 ```
 
-The last step `spread()` is not necessary, depends if need like your data in [long or wide format](https://r4ds.had.co.nz/tidy-data.html#spreading-and-gathering).
+```{r, echo = FALSE}
+panicles_feature %>% knitr::kable()
+```
+
+The last step, `spread()`, is not necessary, but it is [suggested to tidy your dataset](https://r4ds.had.co.nz/tidy-data.html#spreading-and-gathering). 
+Since, according to the tidy data concept, **each observation must have its own row**. Here we use `spread()` to collect all observations about one single panicle that are scattered across multiple rows, and to put them in one single row.
 
 Let me know if you want me to code these steps in a function.
 
-# More about  igraph and tidygraph
+# More about igraph and tidygraph
 
 Check the [igraph website](https://igraph.org/r/) for a details about it, also [tidygraph](https://www.data-imaginist.com/2017/introducing-tidygraph/) can be useful.

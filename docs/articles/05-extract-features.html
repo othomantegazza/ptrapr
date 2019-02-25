@@ -94,7 +94,7 @@
       <h1>05 - Extract and Save Basic Panicle Features</h1>
                         <h4 class="author">Otho Mantegazza</h4>
             
-            <h4 class="date">2019-02-05</h4>
+            <h4 class="date">2019-02-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/othomantegazza/ptrapr/blob/master/vignettes/05-extract-features.Rmd"><code>vignettes/05-extract-features.Rmd</code></a></small>
       <div class="hidden name"><code>05-extract-features.Rmd</code></div>
@@ -233,24 +233,145 @@ nodes_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"
 <div id="load-many-panicles" class="section level2">
 <h2 class="hasAnchor">
 <a href="#load-many-panicles" class="anchor"></a>load many panicles</h2>
-<p>As in <a href="04-visualize-many-panicles-loop-r.html">the previous vignette</a>, you can parse many panicles and put them in a list. Check that vignette to for a torough explaination of these steps.</p>
+<p>As in <a href="04-visualize-many-panicles-loop-r.html">the previous vignette</a> “Visualize Many Panicles at Once with a Loop”, you can parse many panicles and put them in a list. Check that vignette for a thorough explanation of these step:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">path_to_folder &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="dt">package =</span> <span class="st">"ptrapr"</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">paste0</span>(<span class="st">"/extdata"</span>) 
+
+
+<span class="co"># First record the names of the files</span>
+<span class="co"># substitute path_to_folder with the path to your folder</span>
+panicle_paths &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">list.files</span>(path_to_folder) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="co"># remove the extension (variable part)</span>
+<span class="st">  </span><span class="co"># each panicle has two files with different extension</span>
+<span class="st">  </span><span class="kw"><a href="https://stringr.tidyverse.org/reference/str_remove.html">str_remove</a></span>(<span class="st">".ricegr|.ricepr"</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="co"># store the name of the files without the extension</span>
+<span class="st">  </span><span class="kw">unique</span>()
+
+<span class="co"># Store file names in named object, to use them later</span>
+panicle_paths &lt;-
+<span class="st">  </span>panicle_paths <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>{<span class="kw"><a href="http://www.rdocumentation.org/packages/magrittr/topics/aliases">set_names</a></span>(<span class="dt">x =</span> <span class="kw">paste</span>(path_to_folder, ., <span class="dt">sep =</span> <span class="st">"/"</span>), <span class="dt">nm =</span> .)}
+
+<span class="co"># Parse them in a list, using file name as list names</span>
+panicle_list &lt;-<span class="st"> </span>
+<span class="st">  </span>panicle_paths <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="op">~</span><span class="kw"><a href="../reference/read_full_panicle.html">read_full_panicle</a></span>(.)) 
+
+
+<span class="co"># Then correct the edges on the main axis with invert_edges()</span>
+panicle_list &lt;-<span class="st"> </span>
+<span class="st">  </span>panicle_list <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="op">~</span><span class="kw"><a href="../reference/invert_edges.html">invert_edges</a></span>(., <span class="dt">check_before =</span> <span class="ot">TRUE</span>))
+
+
+<span class="kw">names</span>(panicle_list)</code></pre></div>
 <pre><code>## [1] "1_1_6307" "1_2_6308" "1_3_6309" "2_1_6310" "2_2_6311" "2_3_6312"
 ## [7] "3_1_6313" "3_2_6314" "3_3_6315"</code></pre>
-<pre><code>## [1] "1_1_6307" "1_2_6308" "1_3_6309" "2_1_6310" "2_2_6311" "2_3_6312"
-## [7] "3_1_6313" "3_2_6314" "3_3_6315"</code></pre>
-<p>Afterwards you can <code><a href="https://purrr.tidyverse.org/reference/map.html">map()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows()</a></code> and <code><a href="https://tidyr.tidyverse.org/reference/spread.html">spread()</a></code> to collect all the features in a database.</p>
+<p>Now all the panicles are collected in a named list,</p>
+</div>
+<div id="store-features-from-many-panicles-in-a-dataset" class="section level2">
+<h2 class="hasAnchor">
+<a href="#store-features-from-many-panicles-in-a-dataset" class="anchor"></a>Store features from many panicles in a dataset</h2>
+<p>you can use <code><a href="https://purrr.tidyverse.org/reference/map.html">map()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows()</a></code> and <code><a href="https://tidyr.tidyverse.org/reference/spread.html">spread()</a></code> to collect all the features in a database.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">panicles_feature &lt;-<span class="st"> </span>
 <span class="st">  </span>panicle_list <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># This is the core of the loop in wich</span>
+<span class="st">  </span><span class="co"># we apply the steps to extract panicle features</span>
+<span class="st">  </span><span class="co"># on all the panicles</span>
 <span class="st">  </span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="op">~</span><span class="kw"><a href="http://www.rdocumentation.org/packages/igraph/topics/vertex_attr">vertex_attr</a></span>(.) <span class="op">%&gt;%</span>
 <span class="st">        </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">as_tibble</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">        </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(type) <span class="op">%&gt;%</span>
-<span class="st">        </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/tally.html">count</a></span>()) <span class="op">%&gt;%</span><span class="st">  </span><span class="co">#%&gt;% </span>
-<span class="st">        </span><span class="co"># {set_names(x = .$n, nm = .$type)}) %&gt;% </span>
+<span class="st">        </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/tally.html">count</a></span>()) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="co"># The next steps transform the list of panicle features</span>
+<span class="st">  </span><span class="co"># into a tidy dataset</span>
 <span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span>(<span class="dt">.id =</span> <span class="st">"id"</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="https://tidyr.tidyverse.org/reference/spread.html">spread</a></span>(<span class="dt">key =</span> <span class="st">"type"</span>, <span class="dt">value =</span> <span class="st">"n"</span>)
-
-panicles_feature</code></pre></div>
-<p>The last step <code><a href="https://tidyr.tidyverse.org/reference/spread.html">spread()</a></code> is not necessary, depends if need like your data in <a href="https://r4ds.had.co.nz/tidy-data.html#spreading-and-gathering">long or wide format</a>.</p>
+<span class="st">  </span><span class="kw"><a href="https://tidyr.tidyverse.org/reference/spread.html">spread</a></span>(<span class="dt">key =</span> <span class="st">"type"</span>, <span class="dt">value =</span> <span class="st">"n"</span>)</code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th align="left">id</th>
+<th align="right">End</th>
+<th align="right">Generating</th>
+<th align="right">Primary</th>
+<th align="right">Seconday</th>
+<th align="right">spikelet</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">1_1_6307</td>
+<td align="right">25</td>
+<td align="right">2</td>
+<td align="right">10</td>
+<td align="right">12</td>
+<td align="right">85</td>
+</tr>
+<tr class="even">
+<td align="left">1_2_6308</td>
+<td align="right">16</td>
+<td align="right">2</td>
+<td align="right">9</td>
+<td align="right">5</td>
+<td align="right">69</td>
+</tr>
+<tr class="odd">
+<td align="left">1_3_6309</td>
+<td align="right">20</td>
+<td align="right">2</td>
+<td align="right">9</td>
+<td align="right">9</td>
+<td align="right">71</td>
+</tr>
+<tr class="even">
+<td align="left">2_1_6310</td>
+<td align="right">27</td>
+<td align="right">2</td>
+<td align="right">10</td>
+<td align="right">14</td>
+<td align="right">96</td>
+</tr>
+<tr class="odd">
+<td align="left">2_2_6311</td>
+<td align="right">24</td>
+<td align="right">2</td>
+<td align="right">9</td>
+<td align="right">12</td>
+<td align="right">86</td>
+</tr>
+<tr class="even">
+<td align="left">2_3_6312</td>
+<td align="right">24</td>
+<td align="right">2</td>
+<td align="right">10</td>
+<td align="right">12</td>
+<td align="right">74</td>
+</tr>
+<tr class="odd">
+<td align="left">3_1_6313</td>
+<td align="right">23</td>
+<td align="right">2</td>
+<td align="right">10</td>
+<td align="right">11</td>
+<td align="right">103</td>
+</tr>
+<tr class="even">
+<td align="left">3_2_6314</td>
+<td align="right">19</td>
+<td align="right">2</td>
+<td align="right">6</td>
+<td align="right">10</td>
+<td align="right">76</td>
+</tr>
+<tr class="odd">
+<td align="left">3_3_6315</td>
+<td align="right">25</td>
+<td align="right">2</td>
+<td align="right">9</td>
+<td align="right">14</td>
+<td align="right">79</td>
+</tr>
+</tbody>
+</table>
+<p>The last step, <code><a href="https://tidyr.tidyverse.org/reference/spread.html">spread()</a></code>, is not necessary, but it is <a href="https://r4ds.had.co.nz/tidy-data.html#spreading-and-gathering">suggested to tidy your dataset</a>. Since, according to the tidy data concept, <strong>each observation must have its own row</strong>. Here we use <code><a href="https://tidyr.tidyverse.org/reference/spread.html">spread()</a></code> to collect all observations about one single panicle that are scattered across multiple rows, and to put them in one single row.</p>
 <p>Let me know if you want me to code these steps in a function.</p>
 </div>
 </div>
@@ -276,6 +397,7 @@ panicles_feature</code></pre></div>
       <li>
 <a href="#loop-over-many-panicles-with-map-and-reduce">loop over many panicles with map() and reduce()</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#load-many-panicles">load many panicles</a></li>
+      <li><a href="#store-features-from-many-panicles-in-a-dataset">Store features from many panicles in a dataset</a></li>
       </ul>
 </li>
       <li><a href="#more-about-igraph-and-tidygraph">More about igraph and tidygraph</a></li>
