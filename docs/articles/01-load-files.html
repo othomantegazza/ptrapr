@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ptrapr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.1</span>
       </span>
     </div>
 
@@ -94,7 +94,7 @@
       <h1>01 - Load Panicles Files Into R</h1>
                         <h4 class="author">Otho Mantegazza</h4>
             
-            <h4 class="date">2019-02-05</h4>
+            <h4 class="date">2019-02-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/othomantegazza/ptrapr/blob/master/vignettes/01-load-files.Rmd"><code>vignettes/01-load-files.Rmd</code></a></small>
       <div class="hidden name"><code>01-load-files.Rmd</code></div>
@@ -147,7 +147,9 @@ grain_path &lt;-<span class="st"> </span><span class="kw">system.file</span>(<sp
 
 <span class="co"># load them into R and mergge them</span>
 full_panicle &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_full_panicle.html">read_full_panicle</a></span>(<span class="dt">pr_file =</span> structure_path,
-                                  <span class="dt">gr_file =</span> grain_path)</code></pre></div>
+                                  <span class="dt">gr_file =</span> grain_path)
+<span class="co">#&gt; Warning in fun(libname, pkgname): rgeos: versions of GEOS runtime 3.5.1-CAPI-1.9.1</span>
+<span class="co">#&gt; and GEOS at installation 3.5.0-CAPI-1.9.0differ</span></code></pre></div>
 <p>The function <code><a href="../reference/read_full_panicle.html">read_full_panicle()</a></code> outputs an graph object of class <a href="https://igraph.org/r/"><code>igraph</code></a>.</p>
 <p>This graph can be visualized directly with <code><a href="../reference/plot_panicle.html">plot_panicle()</a></code></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/plot_panicle.html">plot_panicle</a></span>(full_panicle)</code></pre></div>
@@ -165,7 +167,7 @@ full_panicle &lt;-<span class="st"> </span><span class="kw"><a href="../referenc
 <p>So, I can remove the extension from one of those files:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">base_path &lt;-<span class="st"> </span>
 <span class="st">  </span>structure_path <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="https://stringr.tidyverse.org/reference/str_remove.html">str_remove</a></span>(<span class="st">".ricepr"</span>)
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/stringr/topics/str_remove">str_remove</a></span>(<span class="st">".ricepr"</span>)
 
 base_path
 <span class="co">#&gt; [1] "/home/otho/R/x86_64-pc-linux-gnu-library/3.4/ptrapr/extdata/1_1_6307"</span></code></pre></div>

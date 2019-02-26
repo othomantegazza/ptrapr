@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ptrapr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.1</span>
       </span>
     </div>
 
@@ -94,7 +94,7 @@
       <h1>03 - Visualize The Topology of a Panicle</h1>
                         <h4 class="author">Otho Mantegazza</h4>
             
-            <h4 class="date">2019-02-05</h4>
+            <h4 class="date">2019-02-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/othomantegazza/ptrapr/blob/master/vignettes/03-dot-plot.Rmd"><code>vignettes/03-dot-plot.Rmd</code></a></small>
       <div class="hidden name"><code>03-dot-plot.Rmd</code></div>
@@ -213,8 +213,8 @@ p2</code></pre></div>
 <span class="st">  </span><span class="co"># use as.character %&gt;% as_factor() to turn a continuous variable</span>
 <span class="st">  </span><span class="co"># into a categorical one.</span>
 <span class="st">  </span><span class="co"># because node ranks look better if plotted as categorical</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> secondary_rank <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.character</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://forcats.tidyverse.org/reference/as_factor.html">as_factor</a></span>(),
-             <span class="dt">y =</span> primary_rank <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.character</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://forcats.tidyverse.org/reference/as_factor.html">as_factor</a></span>(),
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> secondary_rank <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.character</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/forcats/topics/as_factor">as_factor</a></span>(),
+             <span class="dt">y =</span> primary_rank <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.character</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/forcats/topics/as_factor">as_factor</a></span>(),
              <span class="dt">fill =</span> nodes_downstream)) <span class="op">+</span><span class="st"> </span><span class="co"># nodes on 2ndary branches to fill colours</span>
 <span class="st">  </span><span class="kw">geom_tile</span>(<span class="dt">colour =</span> <span class="st">"grey80"</span>,
             <span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span>
@@ -240,7 +240,7 @@ p2</code></pre></div>
 <span class="st">  </span><span class="co"># Clear axis names</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"Nodes rank along primary branches"</span>,
        <span class="dt">y =</span> <span class="st">"Rank along the rachis"</span>,
-       <span class="dt">fill =</span> <span class="kw"><a href="https://stringr.tidyverse.org/reference/str_wrap.html">str_wrap</a></span>(<span class="st">"Nodes on secondary branch"</span>, <span class="dt">width =</span> <span class="dv">20</span>))
+       <span class="dt">fill =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/stringr/topics/str_wrap">str_wrap</a></span>(<span class="st">"Nodes on secondary branch"</span>, <span class="dt">width =</span> <span class="dv">20</span>))
 p3</code></pre></div>
 <p><img src="03-dot-plot_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 </div>

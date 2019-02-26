@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ptrapr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.1</span>
       </span>
     </div>
 
@@ -94,7 +94,7 @@
       <h1>04 - Visualize Many Panicles at Once With a Loop</h1>
                         <h4 class="author">Otho Mantegazza</h4>
             
-            <h4 class="date">2019-02-05</h4>
+            <h4 class="date">2019-02-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/othomantegazza/ptrapr/blob/master/vignettes/04-visualize-many-panicles-loop-r.Rmd"><code>vignettes/04-visualize-many-panicles-loop-r.Rmd</code></a></small>
       <div class="hidden name"><code>04-visualize-many-panicles-loop-r.Rmd</code></div>
@@ -119,28 +119,52 @@
 <div id="place-all-files-in-one-single-folder" class="section level1">
 <h1 class="hasAnchor">
 <a href="#place-all-files-in-one-single-folder" class="anchor"></a>Place All files in one single folder</h1>
-<p>Place the structure files (<code>.ricepr</code>) and their corrispective grain files (<code>ricegr</code>) of all the panicles that you want to analyze in one single folder. For every single panicle the name of the structure file and the name of the gr file must be exaclty the same (obviously beside the extension).</p>
+<p>Place the structure files (<code>.ricepr</code>) and their corrispective grain files (<code>ricegr</code>) of all the panicles that you want to analyze in one single folder. For every single panicle the name of the <code>.ricepr</code> file and the name of the <code>.ricegr</code> file must be exaclty the same (obviously beside the extension).</p>
 <p>That folder must contain nothing else.</p>
-<p>For all the files stored in one folder, we load their name in R in this way:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># First record the names of the files</span>
-<span class="co"># substitute path_to_folder with the path to your folder</span>
+<p>For all the files stored in one folder, we prepare their paths in a list in this way:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># First store the path to your folder</span>
+<span class="co"># in a variable called path_to_folder.</span>
+<span class="co"># substitute "path/to/folder", with the path to your folder!</span>
+
+path_to_folder &lt;-<span class="st"> "path/to/folder"</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># First record the names of all the files,</span>
 panicle_paths &lt;-<span class="st"> </span>
 <span class="st">  </span><span class="kw">list.files</span>(path_to_folder) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="co"># remove the extension (variable part)</span>
-<span class="st">  </span><span class="co"># each panicle has two files with different extension</span>
-<span class="st">  </span><span class="kw"><a href="https://stringr.tidyverse.org/reference/str_remove.html">str_remove</a></span>(<span class="st">".ricegr|.ricepr"</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="co"># remove the extension,</span>
+<span class="st">  </span><span class="co"># (each panicle has two files with different extension)</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/stringr/topics/str_remove">str_remove</a></span>(<span class="st">".ricegr|.ricepr"</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># store the name of the files without the extension</span>
 <span class="st">  </span><span class="kw">unique</span>()
 
 panicle_paths</code></pre></div>
 <pre><code>## [1] "1_1_6307" "1_2_6308" "1_3_6309" "2_1_6310" "2_2_6311" "2_3_6312"
 ## [7] "3_1_6313" "3_2_6314" "3_3_6315"</code></pre>
-<p>We find it very useful to store the panicle names in a named object (such a named character vector). In this way the names are preserved through the loops.</p>
-<p>Here we use a <code>magrittr</code> trick to pass the LHS (left hand side) argument to the next function in anywhere we want it. To do this, enclose the RHS function in curly brackets and call the LHS with a dot “.”.</p>
+<p>We find it very useful to store the panicle names in a named object (such a named character vector). Because the function map, that we will use to loop over this object, maintains the names of the object in its output. In this way we keep track of the panicle IDs during the loops.</p>
+<p>Here we create a named object using a <code>magrittr</code> trick: we use the curly brackets <code>{}</code> to pass the LHS (left hand side) argument to the RHS (right hand side) of the pipe anywhere we want it as a dot <code>.</code>. To do this, we enclose the RHS function in curly brackets and call the LHS with a dot “.”.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Store file names in named object, to use them later</span>
 panicle_paths &lt;-
 <span class="st">  </span>panicle_paths <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>{<span class="kw"><a href="http://www.rdocumentation.org/packages/magrittr/topics/aliases">set_names</a></span>(<span class="dt">x =</span> <span class="kw">paste</span>(path_to_folder, ., <span class="dt">sep =</span> <span class="st">"/"</span>), <span class="dt">nm =</span> .)}</code></pre></div>
+<p>Now the object <code>panicle_paths</code> stores the paths to al the panicles in a named object.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">panicle_paths</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## 1_1_6307 
+## ptrapr/extdata/1_1_6307" 
+## 1_2_6308 
+## ptrapr/extdata/1_2_6308" 
+## 1_3_6309 
+## ptrapr/extdata/1_3_6309" 
+## 2_1_6310 
+## ptrapr/extdata/2_1_6310" 
+## 2_2_6311 
+## ptrapr/extdata/2_2_6311" 
+## 2_3_6312 
+## ptrapr/extdata/2_3_6312" 
+## 3_1_6313 
+## ptrapr/extdata/3_1_6313" 
+## 3_2_6314 
+## ptrapr/extdata/3_2_6314" 
+## 3_3_6315 
+## ptrapr/extdata/3_3_6315"</code></pre></div>
 </div>
 <div id="parse-all-panicles" class="section level1">
 <h1 class="hasAnchor">
@@ -151,9 +175,10 @@ panicle_paths &lt;-
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Parse them in a list, using file name as list names</span>
 panicle_list &lt;-<span class="st"> </span>
 <span class="st">  </span>panicle_paths <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="op">~</span><span class="kw"><a href="../reference/read_full_panicle.html">read_full_panicle</a></span>(.)) 
-
-<span class="co"># alternative</span>
+<span class="st">  </span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="op">~</span><span class="kw"><a href="../reference/read_full_panicle.html">read_full_panicle</a></span>(.)) </code></pre></div>
+<pre><code>## Warning in fun(libname, pkgname): rgeos: versions of GEOS runtime 3.5.1-CAPI-1.9.1
+## and GEOS at installation 3.5.0-CAPI-1.9.0differ</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># alternative</span>
 <span class="co"># panicle_list &lt;- </span>
 <span class="co">#   panicle_paths %&gt;%</span>
 <span class="co">#   map(~read_full_panicle(</span>

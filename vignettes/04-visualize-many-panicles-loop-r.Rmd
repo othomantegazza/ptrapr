@@ -77,8 +77,29 @@ panicle_paths <-
 
 Now the object `panicle_paths` stores the paths to al the panicles in a named object.
 
-```{r}
+```{r, eval = FALSE}
 panicle_paths
+```
+
+```{r, eval = FALSE}
+## 1_1_6307 
+## ptrapr/extdata/1_1_6307" 
+## 1_2_6308 
+## ptrapr/extdata/1_2_6308" 
+## 1_3_6309 
+## ptrapr/extdata/1_3_6309" 
+## 2_1_6310 
+## ptrapr/extdata/2_1_6310" 
+## 2_2_6311 
+## ptrapr/extdata/2_2_6311" 
+## 2_3_6312 
+## ptrapr/extdata/2_3_6312" 
+## 3_1_6313 
+## ptrapr/extdata/3_1_6313" 
+## 3_2_6314 
+## ptrapr/extdata/3_2_6314" 
+## 3_3_6315 
+## ptrapr/extdata/3_3_6315"
 ```
 
 

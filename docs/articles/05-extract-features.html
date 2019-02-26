@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ptrapr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.1</span>
       </span>
     </div>
 
@@ -94,7 +94,7 @@
       <h1>05 - Extract and Save Basic Panicle Features</h1>
                         <h4 class="author">Otho Mantegazza</h4>
             
-            <h4 class="date">2019-02-07</h4>
+            <h4 class="date">2019-02-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/othomantegazza/ptrapr/blob/master/vignettes/05-extract-features.Rmd"><code>vignettes/05-extract-features.Rmd</code></a></small>
       <div class="hidden name"><code>05-extract-features.Rmd</code></div>
@@ -148,7 +148,7 @@ nodes_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"
 <tr class="odd">
 <td align="right">1384</td>
 <td align="right">887</td>
-<td align="left">Seconday</td>
+<td align="left">Secondary</td>
 <td align="left">java.awt.Point[x=1384,y=887]</td>
 <td align="right">1</td>
 </tr>
@@ -176,7 +176,7 @@ nodes_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"
 <tr class="odd">
 <td align="right">1638</td>
 <td align="right">899</td>
-<td align="left">Seconday</td>
+<td align="left">Secondary</td>
 <td align="left">java.awt.Point[x=1638,y=899]</td>
 <td align="right">5</td>
 </tr>
@@ -216,11 +216,11 @@ nodes_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"
 <td align="right">9</td>
 </tr>
 <tr class="even">
-<td align="left">Seconday</td>
+<td align="left">Secondary</td>
 <td align="right">14</td>
 </tr>
 <tr class="odd">
-<td align="left">spikelet</td>
+<td align="left">Spikelet</td>
 <td align="right">79</td>
 </tr>
 </tbody>
@@ -244,7 +244,7 @@ panicle_paths &lt;-<span class="st"> </span>
 <span class="st">  </span><span class="kw">list.files</span>(path_to_folder) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># remove the extension (variable part)</span>
 <span class="st">  </span><span class="co"># each panicle has two files with different extension</span>
-<span class="st">  </span><span class="kw"><a href="https://stringr.tidyverse.org/reference/str_remove.html">str_remove</a></span>(<span class="st">".ricegr|.ricepr"</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/stringr/topics/str_remove">str_remove</a></span>(<span class="st">".ricegr|.ricepr"</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># store the name of the files without the extension</span>
 <span class="st">  </span><span class="kw">unique</span>()
 
@@ -256,10 +256,10 @@ panicle_paths &lt;-
 <span class="co"># Parse them in a list, using file name as list names</span>
 panicle_list &lt;-<span class="st"> </span>
 <span class="st">  </span>panicle_paths <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="op">~</span><span class="kw"><a href="../reference/read_full_panicle.html">read_full_panicle</a></span>(.)) 
-
-
-<span class="co"># Then correct the edges on the main axis with invert_edges()</span>
+<span class="st">  </span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="op">~</span><span class="kw"><a href="../reference/read_full_panicle.html">read_full_panicle</a></span>(.)) </code></pre></div>
+<pre><code>## Warning in fun(libname, pkgname): rgeos: versions of GEOS runtime 3.5.1-CAPI-1.9.1
+## and GEOS at installation 3.5.0-CAPI-1.9.0differ</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Then correct the edges on the main axis with invert_edges()</span>
 panicle_list &lt;-<span class="st"> </span>
 <span class="st">  </span>panicle_list <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="op">~</span><span class="kw"><a href="../reference/invert_edges.html">invert_edges</a></span>(., <span class="dt">check_before =</span> <span class="ot">TRUE</span>))
@@ -276,7 +276,7 @@ panicle_list &lt;-<span class="st"> </span>
 <p>you can use <code><a href="https://purrr.tidyverse.org/reference/map.html">map()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows()</a></code> and <code><a href="https://tidyr.tidyverse.org/reference/spread.html">spread()</a></code> to collect all the features in a database.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">panicles_feature &lt;-<span class="st"> </span>
 <span class="st">  </span>panicle_list <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="co"># This is the core of the loop in wich</span>
+<span class="st">  </span><span class="co"># This is the core of the loop in which</span>
 <span class="st">  </span><span class="co"># we apply the steps to extract panicle features</span>
 <span class="st">  </span><span class="co"># on all the panicles</span>
 <span class="st">  </span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(<span class="op">~</span><span class="kw"><a href="http://www.rdocumentation.org/packages/igraph/topics/vertex_attr">vertex_attr</a></span>(.) <span class="op">%&gt;%</span>
@@ -293,8 +293,8 @@ panicle_list &lt;-<span class="st"> </span>
 <th align="right">End</th>
 <th align="right">Generating</th>
 <th align="right">Primary</th>
-<th align="right">Seconday</th>
-<th align="right">spikelet</th>
+<th align="right">Secondary</th>
+<th align="right">Spikelet</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
