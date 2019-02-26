@@ -64,7 +64,7 @@ add_grain <- function(panicle_graph,
     igraph::add_vertices(nv = 1,
                          attr = list(x = new_vert[1],
                                      y = new_vert[2],
-                                     type = "spikelet")) %>%
+                                     type = "Spikelet")) %>%
     # igraph::as_long_data_frame()
     igraph::add_edges(edges = c(as.numeric(graph_long[nearest_edge, "from"]), new_vn,
                                 new_vn, as.numeric(graph_long[nearest_edge, "to"])))

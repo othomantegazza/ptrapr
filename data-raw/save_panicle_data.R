@@ -1,4 +1,4 @@
-# library(ptrapr)
+library(ptrapr)
 library(ggraph)
 library(magrittr)
 library(igraph)
