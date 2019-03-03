@@ -11,33 +11,38 @@ editor_options:
   chunk_output_type: console
 ---
 
+# Setup
+
+Load Packages
 
 ```{r, message=FALSE}
 library(ptrapr)
 library(forcats)
 library(magrittr)
-library(igraph)
 library(dplyr)
 library(purrr)
 library(stringr)
 library(ggplot2)
-library(tidyr)
 ```
+
+# load files
+
+And load files for many panicles as in [vignette 4](04-visualize-many-panicles-loop-r.html). 
 
 ```{r}
-tst <- 
-  good_panicle %>%
-  panicle_tibble() %>% 
-  mutate(node_id = paste(primary_rank,
-                         secondary_rank,
-                         sep = "_"))
-```
-
-```{r, echo = FALSE}
 path_to_folder <- system.file(package = "ptrapr") %>%
   paste0("/extdata") 
+```
 
+(note, when you do this on your files, you have to assign to the variable `path_to_folder` **the path to your folder**)
 
+```{r, eval = FALSE}
+# path_to_folder <- "path/to/your/folder"
+```
+
+Read all many panicles in a named list.
+
+```{r}
 # First record the names of all the files,
 panicle_paths <- 
   list.files(path_to_folder) %>%
@@ -47,40 +52,53 @@ panicle_paths <-
   # store the name of the files without the extension
   unique()
 
+# make a named object
 panicle_paths <-
   panicle_paths %>% 
   {set_names(x = paste(path_to_folder, ., sep = "/"), nm = .)}
 
+# read all panicles in a named list
 panicle_list <- 
   panicle_paths %>%
-  map(~read_full_panicle(.)) 
+  map(~read_full_panicle(.)) %>% 
+  map(~invert_edges(., check_before = TRUE))
 ```
 
-```{r}
-add_node_ids <- function(panicle)
-{
-panicle %>%
-  panicle_tibble() #%>% 
-  # mutate(node_id = paste(primary_rank,
-  #                        secondary_rank,
-  #                        sep = "_"))
-}
-```
+Now we have all panicle objects in a named list
 
 ```{r}
-panicles_nodes <- 
+panicle_list %>% map(class)
+```
+
+# Summarize features
+
+First you can use the `panicle_tibble()` function to turn every panicle graph into a tibble (data frame) that store the features of each node in the panicle.
+
+```{r}
+panicles_tbs <- 
   panicle_list %>% 
-  map(add_node_ids)
+  map(panicle_tibble)
 ```
+
+Then you can bind the rows of all the tibbles into one, and summarize the general characteristics of every panicle, grouping every node by its rank along the primary and secondary branch.
 
 ```{r}
 summarized_panicles <- 
-  panicles_nodes %>% 
+  panicles_tbs %>% 
+  # bind rows to put all panicles into one tibble
   reduce(bind_rows) %>% 
   group_by(primary_rank, secondary_rank) %>% 
+  # how many nodes have that rank? 
+  # one per panicle
   summarise(n = n(),
+            # if that node makes a tertiary branch,
+            # how many nodes does the tertiary branch has?
             nodes_downstream = sum(nodes_downstream)/length(panicle_list))
 ```
+
+# Plot
+
+Similar to the panicle tileplot 
 
 ```{r}
 summarized_panicles %>%  
@@ -90,6 +108,10 @@ summarized_panicles %>%
   geom_tile(colour = "grey80",
             size = 1.5) +
   geom_text(aes(label = nodes_downstream %>% round(1))) +
-  scale_fill_viridis_c()
+  scale_fill_viridis_c() +
+  labs(x = "Rank along primary branch",
+       y = "Rank along secondary branch",
+       fill = "How many panicles\nhave that node?",
+       caption = "The numbers indicate the average numbers of nodes into the tertiary branch")
 ```
 
