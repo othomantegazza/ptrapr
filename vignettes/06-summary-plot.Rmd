@@ -1,0 +1,95 @@
+---
+title: "05 - Extract and Save Basic Panicle Features"
+author: "Otho Mantegazza"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{05 - Extract and Save Basic Panicle Features}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options:
+  chunk_output_type: console
+---
+
+
+```{r, message=FALSE}
+library(ptrapr)
+library(forcats)
+library(magrittr)
+library(igraph)
+library(dplyr)
+library(purrr)
+library(stringr)
+library(ggplot2)
+library(tidyr)
+```
+
+```{r}
+tst <- 
+  good_panicle %>%
+  panicle_tibble() %>% 
+  mutate(node_id = paste(primary_rank,
+                         secondary_rank,
+                         sep = "_"))
+```
+
+```{r, echo = FALSE}
+path_to_folder <- system.file(package = "ptrapr") %>%
+  paste0("/extdata") 
+
+
+# First record the names of all the files,
+panicle_paths <- 
+  list.files(path_to_folder) %>%
+  # remove the extension,
+  # (each panicle has two files with different extension)
+  str_remove(".ricegr|.ricepr") %>%
+  # store the name of the files without the extension
+  unique()
+
+panicle_paths <-
+  panicle_paths %>% 
+  {set_names(x = paste(path_to_folder, ., sep = "/"), nm = .)}
+
+panicle_list <- 
+  panicle_paths %>%
+  map(~read_full_panicle(.)) 
+```
+
+```{r}
+add_node_ids <- function(panicle)
+{
+panicle %>%
+  panicle_tibble() #%>% 
+  # mutate(node_id = paste(primary_rank,
+  #                        secondary_rank,
+  #                        sep = "_"))
+}
+```
+
+```{r}
+panicles_nodes <- 
+  panicle_list %>% 
+  map(add_node_ids)
+```
+
+```{r}
+summarized_panicles <- 
+  panicles_nodes %>% 
+  reduce(bind_rows) %>% 
+  group_by(primary_rank, secondary_rank) %>% 
+  summarise(n = n(),
+            nodes_downstream = sum(nodes_downstream)/length(panicle_list))
+```
+
+```{r}
+summarized_panicles %>%  
+  ggplot(aes(x = secondary_rank %>% as.character() %>% as_factor(),
+             y = primary_rank %>% as.character() %>% as_factor(),
+             fill = n)) +
+  geom_tile(colour = "grey80",
+            size = 1.5) +
+  geom_text(aes(label = nodes_downstream %>% round(1))) +
+  scale_fill_viridis_c()
+```
+
