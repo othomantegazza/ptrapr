@@ -1,10 +1,10 @@
 ---
-title: "05 - Extract and Save Basic Panicle Features"
+title: "06 - Make a Plot that Summarizes Many Panicles"
 author: "Otho Mantegazza"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{05 - Extract and Save Basic Panicle Features}
+  %\VignetteIndexEntry{06 - Make a Plot that Summarizes Many Panicles}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options:
@@ -87,6 +87,10 @@ summarized_panicles <-
   panicles_tbs %>% 
   # bind rows to put all panicles into one tibble
   reduce(bind_rows) %>% 
+  # 1 node downstream for spikelets
+  # make more sense when you take average
+  mutate(nodes_downstream = case_when(nodes_downstream == 0 ~ 1,
+                                      TRUE ~ nodes_downstream)) %>% 
   group_by(primary_rank, secondary_rank) %>% 
   # how many nodes have that rank? 
   # one per panicle
@@ -95,6 +99,13 @@ summarized_panicles <-
             # how many nodes does the tertiary branch has?
             nodes_downstream = sum(nodes_downstream)/length(panicle_list))
 ```
+
+This is how the summarized dataset looks like.
+
+```{r}
+summarized_panicles
+```
+
 
 # Plot
 
@@ -110,8 +121,12 @@ summarized_panicles %>%
   geom_text(aes(label = nodes_downstream %>% round(1))) +
   scale_fill_viridis_c() +
   labs(x = "Rank along primary branch",
-       y = "Rank along secondary branch",
+       y = "Rank along the rachis",
        fill = "How many panicles\nhave that node?",
        caption = "The numbers indicate the average numbers of nodes into the tertiary branch")
 ```
 
+Notes:
+
+1. The fill color is the number of panicles that have that node.
+2. The text is the average number of nodes downstream on the secondary branch/spikelet ( 1 = spikelet, > 1 higher order branches)
