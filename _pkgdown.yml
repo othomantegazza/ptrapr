@@ -9,3 +9,5 @@ articles:
   contents: 04-visualize-many-panicles-loop-r
 - title: 05 - Extract Panicle Features in a Dataframe
   contents: 05-extract-features
+- title: 06 - Make a Plot that Summarizes Many Panicles
+  contents: 06-summary-plot

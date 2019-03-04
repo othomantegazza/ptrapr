@@ -30,7 +30,7 @@ Imports:
     xml2 (>= 1.2.0),
     ellipsis(>= 0.1.0),
     forcats(>= 0.3.0)
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Suggests: 
     knitr,
     rmarkdown,

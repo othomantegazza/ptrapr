@@ -206,3 +206,7 @@ panicle_list %>%
 dev.off()
 ```
 
+```{r, echo=FALSE, eval=FALSE}
+panicle_list[c(1:7, 9)]
+```
+
