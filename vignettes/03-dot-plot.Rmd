@@ -173,7 +173,7 @@ p3 <-
   # Clear axis names
   labs(x = "Nodes rank along primary branches",
        y = "Rank along the rachis",
-       fill = str_wrap("Nodes on secondary branch", width = 20))
+       fill = str_wrap("Number of Spikelet", width = 20))
 p3
 ```
 
