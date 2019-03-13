@@ -30,7 +30,7 @@ library(cowplot)
 
 # Place All files in one single folder
 
-Place the structure files (`.ricepr`) and their corrispective grain files (`ricegr`) of all the panicles that you want to analyze in one single folder. For every single panicle the name of the `.ricepr` file and the name of the `.ricegr` file must be exaclty the same (obviously beside the extension).
+Place the structure files (`.ricepr`) and their correspective grain files (`ricegr`) of all the panicles that you want to analyze in one single folder. For every single panicle the name of the `.ricepr` file and the name of the `.ricegr` file must be exaclty the same (obviously beside the extension).
 
 That folder must contain nothing else.
 
