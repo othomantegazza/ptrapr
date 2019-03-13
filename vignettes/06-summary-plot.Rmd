@@ -122,8 +122,8 @@ summarized_panicles %>%
   scale_fill_viridis_c() +
   labs(x = "Rank along primary branch",
        y = "Rank along the rachis",
-       fill = "How many panicles\nhave that node?",
-       caption = "The numbers indicate the average numbers of nodes into the tertiary branch")
+       fill = "Numbers of Spikelet on each nodes",
+       caption = "The numbers indicate the average numbers of spikelets into the secondary branch")
 ```
 
 Notes:
