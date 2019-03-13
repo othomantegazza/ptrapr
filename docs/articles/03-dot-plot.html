@@ -98,7 +98,7 @@
       <h1>03 - Visualize The Topology of a Panicle</h1>
                         <h4 class="author">Otho Mantegazza</h4>
             
-            <h4 class="date">2019-03-04</h4>
+            <h4 class="date">2019-03-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/othomantegazza/ptrapr/blob/master/vignettes/03-dot-plot.Rmd"><code>vignettes/03-dot-plot.Rmd</code></a></small>
       <div class="hidden name"><code>03-dot-plot.Rmd</code></div>
@@ -124,7 +124,7 @@
 <div id="intro-get-data" class="section level1">
 <h1 class="hasAnchor">
 <a href="#intro-get-data" class="anchor"></a>Intro / get data</h1>
-<p>In this Vignette you will learn how to visualize the panicle stucture, with some simple plots that highlight important features such as the number of spikelets, the number of branches and their topology.</p>
+<p>In this Vignette you will learn how to visualize the panicle structure, with some simple plots that highlight important features such as the number of spikelets, the number of branches and their topology.</p>
 <p>We provide the R objects <code>good_panicle</code> and <code>inverted_panicle</code> which store a panicle graph that has been already parsed in R. If you want to learn how to parse panicle XML files, please read the Vignette “Load Panicles into R”.</p>
 <p>Access sample panicle data with:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(good_panicle)
@@ -244,7 +244,7 @@ p2</code></pre></div>
 <span class="st">  </span><span class="co"># Clear axis names</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">"Nodes rank along primary branches"</span>,
        <span class="dt">y =</span> <span class="st">"Rank along the rachis"</span>,
-       <span class="dt">fill =</span> <span class="kw"><a href="https://stringr.tidyverse.org/reference/str_wrap.html">str_wrap</a></span>(<span class="st">"Nodes on secondary branch"</span>, <span class="dt">width =</span> <span class="dv">20</span>))
+       <span class="dt">fill =</span> <span class="kw"><a href="https://stringr.tidyverse.org/reference/str_wrap.html">str_wrap</a></span>(<span class="st">"Number of Spikelet"</span>, <span class="dt">width =</span> <span class="dv">20</span>))
 p3</code></pre></div>
 <p><img src="03-dot-plot_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 </div>

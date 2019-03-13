@@ -98,7 +98,7 @@
       <h1>02 - Why and How to Invert Edges</h1>
                         <h4 class="author">Otho Mantegazza</h4>
             
-            <h4 class="date">2019-03-04</h4>
+            <h4 class="date">2019-03-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/othomantegazza/ptrapr/blob/master/vignettes/02-why-invert-edges.Rmd"><code>vignettes/02-why-invert-edges.Rmd</code></a></small>
       <div class="hidden name"><code>02-why-invert-edges.Rmd</code></div>
@@ -120,8 +120,8 @@
 <h1 class="hasAnchor">
 <a href="#issue---direction-of-the-edges-in-ptrapr-output" class="anchor"></a>Issue - direction of the edges in ptrapr output</h1>
 <p>Sometimes, the direction of the edges in the graphs produced with ptrap is inverted.</p>
-<p>Every edge corrispond to the part of a branch that connect one node to another. By convention each edge should be directed outward: pointing from the node closer to the base of the panicle to the one further away.</p>
-<p>You can understand this better by looking at the panicle graphs: we proveide two panicle graph objects:</p>
+<p>Every edge correspond to the part of a branch that connect one node to another. By convention each edge should be directed outward: pointing from the node closer to the base of the panicle to the one further away.</p>
+<p>You can understand this better by looking at the panicle graphs: we provide two panicle graph objects:</p>
 <ul>
 <li>One named <code>good_panicle</code> in which every edge points outward.</li>
 <li>One named <code>inverted_panicle</code> in which the edges on the main rachis axis point inward.</li>
@@ -130,7 +130,7 @@
 <p>The <code>good_panicle</code> graph has no inverted edges:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">good_panicle <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/plot_panicle.html">plot_panicle</a></span>()</code></pre></div>
 <p><img src="02-why-invert-edges_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
-<p>Compare the previous graph with the one below, repersenting the <code>inverted_panicle</code> object. In the graph below, the edges on the main axis are inverted.</p>
+<p>Compare the previous graph with the one below, representing the <code>inverted_panicle</code> object. In the graph below, the edges on the main axis are inverted.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">inverted_panicle <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/plot_panicle.html">plot_panicle</a></span>()</code></pre></div>
 <p><img src="02-why-invert-edges_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 </div>

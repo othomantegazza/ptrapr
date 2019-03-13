@@ -98,7 +98,7 @@
       <h1>01 - Load Panicles Files Into R</h1>
                         <h4 class="author">Otho Mantegazza</h4>
             
-            <h4 class="date">2019-03-04</h4>
+            <h4 class="date">2019-03-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/othomantegazza/ptrapr/blob/master/vignettes/01-load-files.Rmd"><code>vignettes/01-load-files.Rmd</code></a></small>
       <div class="hidden name"><code>01-load-files.Rmd</code></div>
@@ -138,7 +138,7 @@
 <div id="easily-read-and-plot-the-full-panicle" class="section level2">
 <h2 class="hasAnchor">
 <a href="#easily-read-and-plot-the-full-panicle" class="anchor"></a>Easily read and plot the full panicle</h2>
-<p>We provide a convinent function that loads a full panicle in R: <code><a href="../reference/read_full_panicle.html">read_full_panicle()</a></code>. This funcrtion reads a file tha stores the panicle architecture (that has extension <code>.ricepr</code>) and its counterpart that stores the grain coordinates (that has extension <code>.ricegr</code>) and merges them together.</p>
+<p>We provide a convenient function that loads a full panicle in R: <code><a href="../reference/read_full_panicle.html">read_full_panicle()</a></code>. This function reads a file that stores the panicle architecture (that has extension <code>.ricepr</code>) and its counterpart that stores the grain coordinates (that has extension <code>.ricegr</code>) and merges them together.</p>
 <p>This function requires the path to both files as argument.</p>
 <p>We provide examples of <code>.ricepr</code> and <code>.ricegr</code> files bundled in this package, with the following lines of code you can access those files and load them into R:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># find a .ricepr file</span>
@@ -212,7 +212,7 @@ panicle &lt;-
 <div id="read-grain-coordinates-with-read_grains" class="section level2">
 <h2 class="hasAnchor">
 <a href="#read-grain-coordinates-with-read_grains" class="anchor"></a>Read Grain Coordinates with read_grains()</h2>
-<p>Likewise, we provide a sample <code>.ricegr</code> file. This file stores coordinates for all the grains on the panicle, but no structual / topological information.</p>
+<p>Likewise, we provide a sample <code>.ricegr</code> file. This file stores coordinates for all the grains on the panicle, but no structural / topological information.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">grain_path &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"extdata/1_1_6307.ricegr"</span>,
                           <span class="dt">package =</span> <span class="st">"ptrapr"</span>)
 
@@ -230,7 +230,7 @@ grains &lt;-<span class="st"> </span>
 <div id="merge-grains-into-the-panicle-graph-with-add_all_grains" class="section level2">
 <h2 class="hasAnchor">
 <a href="#merge-grains-into-the-panicle-graph-with-add_all_grains" class="anchor"></a>Merge Grains into the Panicle Graph with add_all_grains()</h2>
-<p>Including grains into the panicle graph is a non trivial task with no perfect solution. We had best results by assigning the grain to the closest bracnh and by splitting the brach on the grain itself, creating a new intermediate node.</p>
+<p>Including grains into the panicle graph is a non trivial task with no perfect solution. We had best results by assigning the grain to the closest branch and by splitting the branch on the grain itself, creating a new intermediate node.</p>
 <p>You can do this with the function <code><a href="../reference/add_all_grains.html">add_all_grains()</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">full_panicle &lt;-<span class="st"> </span>
 <span class="st">  </span>panicle <span class="op">%&gt;%</span>

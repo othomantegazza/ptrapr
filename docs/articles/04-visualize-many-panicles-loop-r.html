@@ -98,7 +98,7 @@
       <h1>04 - Visualize Many Panicles at Once With a Loop</h1>
                         <h4 class="author">Otho Mantegazza</h4>
             
-            <h4 class="date">2019-03-04</h4>
+            <h4 class="date">2019-03-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/othomantegazza/ptrapr/blob/master/vignettes/04-visualize-many-panicles-loop-r.Rmd"><code>vignettes/04-visualize-many-panicles-loop-r.Rmd</code></a></small>
       <div class="hidden name"><code>04-visualize-many-panicles-loop-r.Rmd</code></div>
@@ -108,7 +108,7 @@
     
     
 <p>Here you will learn how to visualize the structure and the topology of many panicles with a loop.</p>
-<p>There are many ways to achieve this, hereby we provide some ideas on how to do it. Feel free to modify and imporve the workflow that we propose. Feel free also to suggest us how to improve this workflow, to do so, contact us through issues and pull requests.</p>
+<p>There are many ways to achieve this, hereby we provide some ideas on how to do it. Feel free to modify and improve the workflow that we propose. Feel free also to suggest us how to improve this workflow, to do so, contact us through issues and pull requests.</p>
 <div id="setup" class="section level1">
 <h1 class="hasAnchor">
 <a href="#setup" class="anchor"></a>setup</h1>
@@ -123,7 +123,7 @@
 <div id="place-all-files-in-one-single-folder" class="section level1">
 <h1 class="hasAnchor">
 <a href="#place-all-files-in-one-single-folder" class="anchor"></a>Place All files in one single folder</h1>
-<p>Place the structure files (<code>.ricepr</code>) and their corrispective grain files (<code>ricegr</code>) of all the panicles that you want to analyze in one single folder. For every single panicle the name of the <code>.ricepr</code> file and the name of the <code>.ricegr</code> file must be exaclty the same (obviously beside the extension).</p>
+<p>Place the structure files (<code>.ricepr</code>) and their corresponding grain files (<code>ricegr</code>) of all the panicles that you want to analyze in one single folder. For every single panicle the name of the <code>.ricepr</code> file and the name of the <code>.ricegr</code> file must be exactly the same (obviously beside the extension).</p>
 <p>That folder must contain nothing else.</p>
 <p>For all the files stored in one folder, we prepare their paths in a list in this way:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># First store the path to your folder</span>
@@ -149,7 +149,7 @@ panicle_paths</code></pre></div>
 panicle_paths &lt;-
 <span class="st">  </span>panicle_paths <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>{<span class="kw"><a href="https://www.rdocumentation.org/packages/magrittr/topics/aliases">set_names</a></span>(<span class="dt">x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(path_to_folder, ., <span class="dt">sep =</span> <span class="st">"/"</span>), <span class="dt">nm =</span> .)}</code></pre></div>
-<p>Now the object <code>panicle_paths</code> stores the paths to al the panicles in a named object.</p>
+<p>Now the object <code>panicle_paths</code> stores the paths to all the panicles in a named object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">panicle_paths</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## 1_1_6307 
 ## ptrapr/extdata/1_1_6307" 
@@ -173,7 +173,7 @@ panicle_paths &lt;-
 <div id="parse-all-panicles" class="section level1">
 <h1 class="hasAnchor">
 <a href="#parse-all-panicles" class="anchor"></a>Parse All Panicles</h1>
-<p>Afterwards, you can loop the main worflow on the named object <code>panicle_paths</code> with <code><a href="https://purrr.tidyverse.org/reference/map.html">map()</a></code>. This function from the package <code>purrr</code> is convenient because it loops over r objects preserving their names.</p>
+<p>Afterwards, you can loop the main workflow on the named object <code>panicle_paths</code> with <code><a href="https://purrr.tidyverse.org/reference/map.html">map()</a></code>. This function from the package <code>purrr</code> is convenient because it loops over r objects preserving their names.</p>
 <p>Here we show you how build loops over the functions of <code>ptrapr</code> one by one.</p>
 <p>First parse and load all the files with <code><a href="../reference/read_full_panicle.html">read_full_panicle()</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Parse them in a list, using file name as list names</span>
@@ -206,11 +206,11 @@ panicle_list &lt;-<span class="st"> </span>
 <li>and a <code><a href="../reference/panicle_tileplot.html">panicle_tileplot()</a></code> that focuses on the topology of branching.</li>
 </ul>
 <p>You can combine plots in many ways. Hereby we use the package <a href="https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html"><code>cowplot</code></a>.</p>
-<p>Although we provide the plotting funcitions <code>panicle_plot()</code> and <code><a href="../reference/panicle_tileplot.html">panicle_tileplot()</a></code>, which are based on <code>ggplot2</code> and ggraph, we suggest you that you design your own plotting functions, because only this way you’ll achieve the versatility required for exploratory data analysis. You can learn how to design your own plotting functions in the previous vignettes.</p>
+<p>Although we provide the plotting functions <code>panicle_plot()</code> and <code><a href="../reference/panicle_tileplot.html">panicle_tileplot()</a></code>, which are based on <code>ggplot2</code> and ggraph, we suggest you that you design your own plotting functions, because only this way you’ll achieve the versatility required for exploratory data analysis. You can learn how to design your own plotting functions in the previous vignettes.</p>
 <div id="how-to-wrap-iterate-over-multiple-plot-functions" class="section level2">
 <h2 class="hasAnchor">
 <a href="#how-to-wrap-iterate-over-multiple-plot-functions" class="anchor"></a>How to wrap iterate over multiple plot functions</h2>
-<p>So, we want to wrap <code>panicle_plot()</code> and <code><a href="../reference/panicle_tileplot.html">panicle_tileplot()</a></code>into another function, to plot together different panicle visualisations, and we want to loop that wrapper over a list of panicle using the name of the panicle file of as title of the plots.</p>
+<p>So, we want to wrap <code>panicle_plot()</code> and <code><a href="../reference/panicle_tileplot.html">panicle_tileplot()</a></code>into another function, to plot together different panicle visualizations, and we want to loop that wrapper over a list of panicle using the name of the panicle file of as title of the plots.</p>
 <p>To use the name as title, you will have to loop over the names of <code>panicle_list</code> instead of the list itself.</p>
 <p>(If you want to master details and quirks of loops and iteration in R, you can <a href="https://adv-r.hadley.nz/functionals.html">learn about them in here</a>).</p>
 <p>This might be the most difficult part. We draft a the <code>plot_both()</code> function, that returns a plot (grob) list. and we feed that list to cowplot.</p>
