@@ -54,7 +54,7 @@ We have included examples of those files in this package. You can access these e
 
 ## Easily read and plot the full panicle
 
-We provide a convinent function that loads a full panicle in R: `read_full_panicle()`. This funcrtion reads a file tha stores the panicle architecture (that has extension `.ricepr`) and its counterpart that stores the grain coordinates (that has extension `.ricegr`) and merges them together.
+We provide a convinient function that loads a full panicle in R: `read_full_panicle()`. This funcrtion reads a file that stores the panicle architecture (that has extension `.ricepr`) and its counterpart that stores the grain coordinates (that has extension `.ricegr`) and merges them together.
 
 This function requires the path to both files as argument. 
 
