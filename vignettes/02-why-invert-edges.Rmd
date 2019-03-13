@@ -25,7 +25,7 @@ library(tidygraph)
 
 Sometimes, the direction of the edges in the graphs produced with ptrap is inverted.
 
-Every edge corrispond to the part of a branch that connect one node to another. By convention each edge should be directed outward: pointing from the node closer to the base of the panicle to the one further away.
+Every edge correspond to the part of a branch that connect one node to another. By convention each edge should be directed outward: pointing from the node closer to the base of the panicle to the one further away.
 
 You can understand this better by looking at the panicle graphs: we proveide two panicle graph objects:
 
@@ -40,7 +40,7 @@ The `good_panicle` graph has no inverted edges:
 good_panicle %>% plot_panicle()
 ```
 
-Compare the previous graph with the one below, repersenting the `inverted_panicle` object. In the graph below, the edges on the main axis are inverted.
+Compare the previous graph with the one below, representing the `inverted_panicle` object. In the graph below, the edges on the main axis are inverted.
 
 ```{r}
 inverted_panicle %>% plot_panicle()
