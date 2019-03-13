@@ -13,7 +13,7 @@ editor_options:
 
 Here you will learn how to visualize the structure and the topology of many panicles with a loop.
 
-There are many ways to achieve this, hereby we provide some ideas on how to do it. Feel free to modify and imporve the workflow that we propose. Feel free also to suggest us how to improve this workflow, to do so, contact us through issues and pull requests.
+There are many ways to achieve this, hereby we provide some ideas on how to do it. Feel free to modify and improve the workflow that we propose. Feel free also to suggest us how to improve this workflow, to do so, contact us through issues and pull requests.
 
 # setup
 
@@ -30,7 +30,7 @@ library(cowplot)
 
 # Place All files in one single folder
 
-Place the structure files (`.ricepr`) and their correspective grain files (`ricegr`) of all the panicles that you want to analyze in one single folder. For every single panicle the name of the `.ricepr` file and the name of the `.ricegr` file must be exaclty the same (obviously beside the extension).
+Place the structure files (`.ricepr`) and their corresponding grain files (`ricegr`) of all the panicles that you want to analyze in one single folder. For every single panicle the name of the `.ricepr` file and the name of the `.ricegr` file must be exactly the same (obviously beside the extension).
 
 That folder must contain nothing else.
 
@@ -75,7 +75,7 @@ panicle_paths <-
   {set_names(x = paste(path_to_folder, ., sep = "/"), nm = .)}
 ```
 
-Now the object `panicle_paths` stores the paths to al the panicles in a named object.
+Now the object `panicle_paths` stores the paths to all the panicles in a named object.
 
 ```{r, eval = FALSE}
 panicle_paths
@@ -105,7 +105,7 @@ panicle_paths
 
 # Parse All Panicles
 
-Afterwards, you can loop the main worflow on the named object `panicle_paths` with `map()`. This function from the package `purrr` is convenient because it loops over r objects preserving their names.
+Afterwards, you can loop the main workflow on the named object `panicle_paths` with `map()`. This function from the package `purrr` is convenient because it loops over r objects preserving their names.
 
 Here we show you how build loops over the functions of `ptrapr` one by one.
 
@@ -150,11 +150,11 @@ In this last part we show you how to combine two kind of plots:
 
 You can combine plots in many ways. Hereby we use the package [`cowplot`](https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html). 
 
-Although we provide the plotting funcitions `panicle_plot()` and `panicle_tileplot()`, which are based on `ggplot2` and ggraph, we suggest you that you design your own plotting functions, because only this way you'll achieve the versatility required for exploratory data analysis. You can learn how to design your own plotting functions in the previous vignettes.
+Although we provide the plotting functions `panicle_plot()` and `panicle_tileplot()`, which are based on `ggplot2` and ggraph, we suggest you that you design your own plotting functions, because only this way you'll achieve the versatility required for exploratory data analysis. You can learn how to design your own plotting functions in the previous vignettes.
 
 ## How to wrap iterate over multiple plot functions
 
-So, we want to wrap `panicle_plot()` and `panicle_tileplot()`into another function, to plot together different panicle visualisations, and we want to loop that wrapper over a list of panicle using the name of the panicle file of as title of the plots.
+So, we want to wrap `panicle_plot()` and `panicle_tileplot()`into another function, to plot together different panicle visualizations, and we want to loop that wrapper over a list of panicle using the name of the panicle file of as title of the plots.
 
 To use the name as title, you will have to loop over the names of `panicle_list` instead of the list itself.
 

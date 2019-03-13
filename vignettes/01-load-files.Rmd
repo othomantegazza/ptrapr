@@ -54,7 +54,7 @@ We have included examples of those files in this package. You can access these e
 
 ## Easily read and plot the full panicle
 
-We provide a convinient function that loads a full panicle in R: `read_full_panicle()`. This funcrtion reads a file that stores the panicle architecture (that has extension `.ricepr`) and its counterpart that stores the grain coordinates (that has extension `.ricegr`) and merges them together.
+We provide a convenient function that loads a full panicle in R: `read_full_panicle()`. This function reads a file that stores the panicle architecture (that has extension `.ricepr`) and its counterpart that stores the grain coordinates (that has extension `.ricegr`) and merges them together.
 
 This function requires the path to both files as argument. 
 
@@ -161,7 +161,7 @@ panicle %>%
 
 ## Read Grain Coordinates with read_grains()
 
-Likewise, we provide a sample `.ricegr` file. This file stores coordinates for all the grains on the panicle, but no structual / topological information.
+Likewise, we provide a sample `.ricegr` file. This file stores coordinates for all the grains on the panicle, but no structural / topological information.
 
 ```{r}
 grain_path <- system.file("extdata/1_1_6307.ricegr",
@@ -184,7 +184,7 @@ ggplot(grains,
 
 ## Merge Grains into the Panicle Graph with add_all_grains()
 
-Including grains into the panicle graph is a non trivial task with no perfect solution. We had best results by assigning the grain to the closest bracnh and by splitting the brach on the grain itself, creating a new intermediate node.
+Including grains into the panicle graph is a non trivial task with no perfect solution. We had best results by assigning the grain to the closest branch and by splitting the branch on the grain itself, creating a new intermediate node.
 
 You can do this with the function `add_all_grains()`. 
 

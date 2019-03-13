@@ -35,7 +35,7 @@ theme_set(theme_minimal())
 
 # Intro / get data
 
-In this Vignette you will learn how to visualize the panicle stucture, with some simple plots that highlight important features such as the number of spikelets, the number of branches and their topology.
+In this Vignette you will learn how to visualize the panicle structure, with some simple plots that highlight important features such as the number of spikelets, the number of branches and their topology.
 
 We provide the R objects `good_panicle` and `inverted_panicle` which store a panicle graph that has been already parsed in R. If you want to learn how to parse panicle XML files, please read the Vignette "Load Panicles into R".
 

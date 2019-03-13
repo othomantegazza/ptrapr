@@ -27,7 +27,7 @@ Sometimes, the direction of the edges in the graphs produced with ptrap is inver
 
 Every edge correspond to the part of a branch that connect one node to another. By convention each edge should be directed outward: pointing from the node closer to the base of the panicle to the one further away.
 
-You can understand this better by looking at the panicle graphs: we proveide two panicle graph objects:
+You can understand this better by looking at the panicle graphs: we provide two panicle graph objects:
 
 - One named `good_panicle` in which every edge points outward.
 - One named `inverted_panicle` in which the edges on the main rachis axis point inward.
