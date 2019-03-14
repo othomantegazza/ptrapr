@@ -37,7 +37,7 @@ theme_set(theme_minimal())
 
 # Read Panicle XML files
 
-The software [ptrap](https://bioinfo.ird.fr/index.php/resources/49-uncategorised/102-p-trap) scans pictures of rice panicles and outputs their architecture in two XML files:
+The software [ptrap](https://bioinfo.ird.fr/index.php/resources/49-uncategorised/102-p-trap)(Al-Tam et al., 2013; 10.1186/1471-2229-13-122) scans pictures of rice panicles and outputs their architecture in two XML files:
 
 A structure file:
 : One file, with extension `.ricepr`, stores the xy coordinates of each
